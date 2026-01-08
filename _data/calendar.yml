@@ -37,7 +37,7 @@ events:
     date_end: 2025-12-11
     location: "ExCel, London, United Kingdom"
     url: "https://blackhat.com/eu-25/"
-    status: "not attending"
+    status: "completed"
     description: " Cyber-Crime and IT-Security conference"
     
   - title: "39th Choas Communication Congress" 
@@ -46,7 +46,7 @@ events:
     date_end: 2025-12-30
     location: "Hamburg, Germany"
     url: "https://events.ccc.de/congress/2025/infos/startpage.html"
-    status: "not attending"
+    status: "completed"
     description: " Cyber-Crime and IT-Security conference"
     
   - title: "DEF CON 34"
