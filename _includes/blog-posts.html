@@ -5,6 +5,7 @@
     <div class="card-header">
         <span class="card-date">[{{ post.date | date: "%Y-%m-%d" }}]</span>
         <span class="card-tag">#{{ post.tags | first | default: "general" }}</span>
+        <span class="card-reading-time">~{% if post.reading_time %}{{ post.reading_time }}{% else %}{{ post.content | number_of_words | divided_by: 200 | at_least: 1 }} min read{% endif %}</span>
     </div>
     <h3 class="card-title">{{ post.title }}</h3>
     <p class="card-excerpt">
@@ -15,8 +16,8 @@
 {% endfor %}
 
 {% if site.posts.size > 6 %}
-<div class="blog-archive-link" style="grid-column: 1/-1; text-align: center; margin-top: 2rem;">
-    <a href="{{ '/archive/' | relative_url }}" style="display: inline-block; padding: 1rem 2rem; background: rgba(0, 255, 247, 0.1); color: var(--accent-cyan); text-decoration: none; border: 1px solid var(--accent-cyan); border-radius: 8px; font-size: 1.1rem; transition: all 0.3s ease;">
+<div class="blog-archive-link">
+    <a href="{{ '/archive/' | relative_url }}" class="blog-all-posts-btn">
         View All Posts in Archive →
     </a>
 </div>

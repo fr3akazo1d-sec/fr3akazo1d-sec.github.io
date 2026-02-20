@@ -20,34 +20,46 @@ description: Red Team Operator & Security Researcher specializing in adversary e
                     <div class="avatar-border"></div>
                 </div>
                 <div class="terminal-line">
-                    <span class="username glitch" data-text="fr3akazo1d">fr3akazo1d</span><span class="prompt-text glitch" data-text="@root:~#">@root:~#</span>
+                    <span class="username glitch" data-text="fr3akazo1d">fr3akazo1d</span><span class="prompt-text glitch" data-text="@root:~#">@root:~#</span><span class="hero-cmd" id="heroCmd" aria-hidden="true"></span><span class="hero-cursor" id="heroCursor" aria-hidden="true">_</span>
                 </div>
             </div>
         </div>
         
         <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" aria-label="Toggle menu">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
+        <button class="mobile-menu-toggle" aria-label="Toggle navigation">
+            <span class="mob-toggle-text">[&gt;_]</span>
+            <span class="mob-toggle-close" aria-hidden="true">[ x ]</span>
         </button>
 
         <nav class="nav-menu">
+            <span class="nav-prompt" aria-hidden="true"><span class="nav-prompt-user">root</span><span class="nav-prompt-at">@</span><span class="nav-prompt-host">fr3akazo1d</span><span class="nav-prompt-suffix">:~#</span></span>
             <ul>
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#skills" class="nav-link">Skills</a></li>
                 <li><a href="#career" class="nav-link">Career</a></li>
-                <li><a href="{{ site.baseurl }}/conferences/" class="nav-link">Conferences</a></li>
-                <li><a href="{{ site.baseurl }}/gallery/" class="nav-link">Gallery</a></li>
-                <li><a href="{{ site.baseurl }}/calendar/" class="nav-link">Calendar</a></li>
                 <li><a href="#blog" class="nav-link">Blog</a></li>
-                <li><a href="{{ site.baseurl }}/archive/" class="nav-link">Archive</a></li>
-                <li><a href="{{ site.baseurl }}/tags/" class="nav-link">Tags</a></li>
-                <li><a href="{{ site.baseurl }}/resources/" class="nav-link">Resources</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#github" class="nav-link">GitHub</a></li>
+                <li class="nav-dropdown">
+                    <button class="nav-dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                        Explore
+                        <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <ul class="nav-dropdown-menu" role="menu">
+                        <li role="none"><a href="{{ site.baseurl }}/conferences/" class="nav-dropdown-link" role="menuitem">Conferences</a></li>
+                        <li role="none"><a href="{{ site.baseurl }}/gallery/" class="nav-dropdown-link" role="menuitem">Gallery</a></li>
+                        <li role="none"><a href="{{ site.baseurl }}/calendar/" class="nav-dropdown-link" role="menuitem">Calendar</a></li>
+                        <li role="none"><a href="{{ site.baseurl }}/archive/" class="nav-dropdown-link" role="menuitem">Archive</a></li>
+                        <li role="none"><a href="{{ site.baseurl }}/tags/" class="nav-dropdown-link" role="menuitem">Tags</a></li>
+                        <li role="none"><a href="{{ site.baseurl }}/resources/" class="nav-dropdown-link" role="menuitem">Resources</a></li>
+                    </ul>
+                </li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
+            <span class="nav-status" aria-hidden="true"><span class="nav-status-dot"></span>ONLINE</span>
         </nav>
         
         <!-- Fake Hacking Button -->
@@ -126,7 +138,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
     <!-- About Section -->
     <section id="about" class="section">
         <div class="container">
-            <h2 class="section-title glitch" data-text="$ whoami"># whoami</h2>
+            <h2 class="section-title glitch" data-text="# whoami"># whoami</h2>
             <div class="about-content">
                 <div class="terminal-window">
                     <div class="terminal-header">
@@ -161,7 +173,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
     <!-- Skills Section -->
     <section id="skills" class="section">
         <div class="container">
-            <h2 class="section-title glitch" data-text="$ cat /proc/skills"># cat /proc/skills</h2>
+            <h2 class="section-title glitch" data-text="# cat /proc/skills"># cat /proc/skills</h2>
             <div class="skills-matrix">
                 {% for category in site.data.skills.categories %}
                 <div class="skill-category">
@@ -235,7 +247,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
     <!-- Career Timeline Section -->
     <section id="career" class="section">
         <div class="container">
-            <h2 class="section-title glitch" data-text="$ cat /var/log/career.log"># cat /var/log/career.log</h2>
+            <h2 class="section-title glitch" data-text="# cat /var/log/career.log"># cat /var/log/career.log</h2>
             
             <div class="timeline">
                 {% for experience in site.data.career.experiences %}
@@ -411,7 +423,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
                 </h3>
                 <div class="platforms-grid">
                     {% for platform in site.data.career.learning_platforms %}
-                    <a href="{{ platform.profile_url }}" target="_blank" class="platform-card">
+                    <a href="{{ platform.profile_url }}" target="_blank" rel="noopener noreferrer" class="platform-card">
                         <div class="platform-header">
                             <div class="platform-name">{{ platform.name }}</div>
                             {% if platform.rank and platform.rank != "" %}
@@ -431,11 +443,9 @@ description: Red Team Operator & Security Researcher specializing in adversary e
     <!-- Blog Section -->
     <section id="blog" class="section">
         <div class="container">
-            <h2 class="section-title glitch" data-text="$ cat blog.log"># cat blog.log</h2>
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <a href="{{ site.baseurl }}/archive/" style="display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255, 0, 60, 0.1); color: var(--accent-red); text-decoration: none; border: 1px solid var(--accent-red); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; transition: all 0.3s ease;">
-                    [archive]
-                </a>
+            <h2 class="section-title glitch" data-text="# cat blog.log"># cat blog.log</h2>
+            <div class="blog-archive-btn-wrap">
+                <a href="{{ site.baseurl }}/archive/" class="blog-archive-btn">[archive]</a>
             </div>
             <div class="blog-grid">
                 {% include blog-posts.html %}
@@ -446,7 +456,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
     <!-- Projects Section -->
     <section id="projects" class="section">
         <div class="container">
-            <h2 class="section-title glitch" data-text="$ ls -la ~/projects"># ls -la ~/projects</h2>
+            <h2 class="section-title glitch" data-text="# ls -la ~/projects"># ls -la ~/projects</h2>
             <div class="projects-grid">
                 {% for project in site.data.projects %}
                 {% if project.visible == nil or project.visible == true %}
@@ -499,7 +509,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
                         <span class="tag">{{ tag }}</span>
                         {% endfor %}
                     </div>
-                    <a href="{{ project.github_url }}" target="_blank" rel="noopener" class="project-link">View on GitHub →</a>
+                    <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub →</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -507,10 +517,57 @@ description: Red Team Operator & Security Researcher specializing in adversary e
         </div>
     </section>
 
+    <!-- GitHub Section -->
+    <section id="github" class="section">
+        <div class="container">
+            <h2 class="section-title glitch" data-text="# curl api.github.com/fr3akazo1d-sec"># curl api.github.com/fr3akazo1d-sec</h2>
+
+            <!-- Profile Banner -->
+            <div class="github-profile-banner">
+                <div class="github-profile-avatar">
+                    <img src="https://github.com/{{ site.author.github }}.png" alt="GitHub avatar" loading="lazy">
+                </div>
+                <div class="github-profile-info">
+                    <div class="github-profile-name">{{ site.author.github }}</div>
+                    <div class="github-profile-bio">Red Team Operator &amp; Security Researcher</div>
+                    <div class="github-profile-stats" id="githubProfileStats">
+                        <span class="github-stat"><span class="github-stat-value" id="ghRepos">—</span><span class="github-stat-label">repos</span></span>
+                        <span class="github-stat"><span class="github-stat-value" id="ghFollowers">—</span><span class="github-stat-label">followers</span></span>
+                        <span class="github-stat"><span class="github-stat-value" id="ghFollowing">—</span><span class="github-stat-label">following</span></span>
+                    </div>
+                    <a href="https://github.com/{{ site.author.github }}" target="_blank" rel="noopener noreferrer" class="github-profile-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                        View full profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Live Repos -->
+            <h3 class="github-repos-title">Recently active repositories</h3>
+            <div class="github-repos-grid" id="githubReposGrid">
+                <div class="github-loading">
+                    <span class="github-loading-prompt">root@github:~#</span> fetching repositories<span class="cursor-blink">_</span>
+                </div>
+            </div>
+
+            <div class="github-footer">
+                <a href="https://github.com/{{ site.author.github }}?tab=repositories" target="_blank" rel="noopener noreferrer" class="github-all-repos-btn">
+                    View all repositories on GitHub
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact" class="section">
         <div class="container">
-            <h2 class="section-title glitch" data-text="$ cat /etc/contact"># cat /etc/contact</h2>
+            <h2 class="section-title glitch" data-text="# cat /etc/contact"># cat /etc/contact</h2>
             <div class="contact-content">
                 <div class="contact-intro">
                     <p class="contact-description">
@@ -523,7 +580,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
                 
                 <div class="contact-cards-grid">
                     {% for contact in site.data.contact.contacts %}
-                    <a href="{{ contact.url }}" class="contact-card" {% if contact.url contains 'http' %}target="_blank"{% endif %}>
+                    <a href="{{ contact.url }}" class="contact-card" {% if contact.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
                         <div class="contact-card-icon">
                             {% case contact.icon %}
                             {% when 'email' %}
@@ -572,17 +629,26 @@ description: Red Team Operator & Security Researcher specializing in adversary e
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer class="terminal-footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <span class="logo-f">F</span><span class="logo-exclaim">!</span>
-                </div>
-                <p class="footer-motto">
-                    "Sometimes I feel like giving up, then I remember I have a lot of people to prove wrong."
+            <div class="term-footer-bar">
+                <span class="term-footer-btn term-btn-red"></span>
+                <span class="term-footer-btn term-btn-yellow"></span>
+                <span class="term-footer-btn term-btn-green"></span>
+                <span class="term-footer-title">bash — fr3akazo1d@root</span>
+            </div>
+            <div class="term-footer-body">
+                <p class="term-footer-line">
+                    <span class="term-footer-prompt">root@fr3akazo1d:~#</span>
+                    <span class="term-footer-cmd"> logout</span>
                 </p>
-                <p class="footer-copyright">
-                    © 2025 <span class="footer-username">fr3akazo1d</span>. All rights reserved. | Built with ☕ caffeine, ⚡ sleep deprivation, and questionable life choices.
+                <p class="term-footer-output">Session terminated. Goodbye, operator.</p>
+                <p class="term-footer-output">Connection to <span class="term-cyan">fr3akazo1d-sec.github.io</span> closed.</p>
+                <p class="term-footer-output term-footer-dim">[pid: 1337] &nbsp;[uid: 0(root)] &nbsp;[uptime: 2024–∞]</p>
+                <p class="term-footer-output term-footer-comment"># "Sometimes I feel like giving up, then I remember I have a lot of people to prove wrong."</p>
+                <p class="term-footer-output term-footer-dim">© 2026 fr3akazo1d &nbsp;·&nbsp; built with <span class="term-cyan">caffeine</span> &amp; <span class="term-red">sleep deprivation</span></p>
+                <p class="term-footer-cursor-line">
+                    <span class="term-footer-prompt">root@fr3akazo1d:~#</span><span class="term-footer-blink">_</span>
                 </p>
             </div>
         </div>

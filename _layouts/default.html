@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- CSS -->
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
@@ -20,12 +20,22 @@
     <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ '/favicon-32x32.png' | relative_url }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ '/apple-touch-icon.png' | relative_url }}">
+    <meta name="theme-color" content="#10141a">
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+    <meta property="og:url" content="{{ page.url | absolute_url }}">
+    <meta property="og:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}">
+    <meta property="og:description" content="{{ page.description | default: site.description }}">
+    <meta property="og:image" content="{{ '/assets/images/avatar.png' | absolute_url }}">
+    <meta property="og:site_name" content="{{ site.title }}">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@{{ site.author.twitter }}">
+    <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}">
+    <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+    <meta name="twitter:image" content="{{ '/assets/images/avatar.png' | absolute_url }}">
+
     <!-- SEO -->
     {% seo %}
     
@@ -33,6 +43,12 @@
     {% feed_meta %}
 </head>
 <body>
+    <!-- Skip to content (accessibility) -->
+    <a href="#about" class="skip-to-content">Skip to content</a>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
     <!-- Loading Screen -->
     <div class="loading-screen">
         <div class="loading-content">
@@ -53,6 +69,16 @@
     <!-- Custom Cursor -->
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
+
+    <!-- CRT Scanline Overlay -->
+    <div class="crt-overlay" aria-hidden="true"></div>
+
+    <!-- HUD Widget -->
+    <div id="hud" class="hud-widget" aria-hidden="true">
+        <div class="hud-line"><span class="hud-label">SYS </span><span id="hud-time">--:--:--</span></div>
+        <div class="hud-line"><span class="hud-label">UPT </span><span id="hud-uptime">00:00</span></div>
+        <div class="hud-line hud-conn"><span class="hud-dot"></span>CONN ENCRYPTED</div>
+    </div>
 
     {{ content }}
 

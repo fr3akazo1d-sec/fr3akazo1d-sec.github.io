@@ -1,0 +1,164 @@
+---
+layout: default
+title: 404 — Not Found
+permalink: /404.html
+---
+
+{% include nav.html %}
+
+<section class="section error-404-section">
+    <div class="container">
+        <div class="error-terminal">
+            <div class="error-term-bar">
+                <span class="term-footer-btn term-btn-red"></span>
+                <span class="term-footer-btn term-btn-yellow"></span>
+                <span class="term-footer-btn term-btn-green"></span>
+                <span class="term-footer-title">bash — fr3akazo1d@root — 80×24</span>
+            </div>
+            <div class="error-term-body">
+                <p class="error-line">
+                    <span class="error-prompt">root@fr3akazo1d:~#</span>
+                    <span class="error-cmd"> cd {{ page.url | remove: ".html" }}</span>
+                </p>
+                <p class="error-output error-red">bash: cd: {{ page.url | remove: ".html" }}: No such file or directory</p>
+                <p class="error-output error-dim">errno 2 — ENOENT</p>
+                <br>
+                <p class="error-line">
+                    <span class="error-prompt">root@fr3akazo1d:~#</span>
+                    <span class="error-cmd"> cat /var/log/access.log | grep 404 | tail -1</span>
+                </p>
+                <p class="error-output">[<span class="error-cyan">{{ "now" | date: "%Y-%m-%dT%H:%M:%S" }}</span>] <span class="error-red">404</span> GET {{ page.url }} — "Mozilla/5.0 (compatible; RedTeamBrowser/1.0)"</p>
+                <br>
+                <p class="error-output error-dim"># Possible causes:</p>
+                <p class="error-output error-dim">#   → Path was moved or deleted</p>
+                <p class="error-output error-dim">#   → Typo in the URL</p>
+                <p class="error-output error-dim">#   → You were not supposed to be here</p>
+                <br>
+                <p class="error-line">
+                    <span class="error-prompt">root@fr3akazo1d:~#</span>
+                    <span class="error-cmd"> cd ~</span>
+                </p>
+                <p class="error-output">Returning to <span class="error-cyan">/home/fr3akazo1d</span>...</p>
+                <br>
+                <p class="error-cursor-line">
+                    <span class="error-prompt">root@fr3akazo1d:~#</span><span class="term-footer-blink">_</span>
+                </p>
+
+                <a href="{{ site.baseurl }}/" class="error-home-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    cd ~  →  go home
+                </a>
+            </div>
+        </div>
+
+        <p class="error-404-code">404</p>
+    </div>
+</section>
+
+<style>
+.error-404-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+}
+
+.error-404-section .container {
+    position: relative;
+}
+
+.error-terminal {
+    max-width: 680px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(0, 255, 247, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0,255,247,0.05);
+}
+
+.error-term-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.4);
+    padding: 0.55rem 1.2rem;
+    border-bottom: 1px solid rgba(0,255,247,0.08);
+}
+
+.error-term-body {
+    padding: 1.5rem 2rem 2rem;
+}
+
+.error-line {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    margin-bottom: 0.3rem;
+}
+
+.error-prompt { color: var(--accent-red); }
+.error-cmd    { color: var(--text-bright); }
+
+.error-output {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-main);
+    padding-left: 1rem;
+    margin: 0.1rem 0;
+    line-height: 1.7;
+}
+
+.error-red  { color: var(--accent-red); padding-left: 0; }
+.error-cyan { color: var(--accent-cyan); }
+.error-dim  { opacity: 0.4; }
+
+.error-cursor-line {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    gap: 0.1rem;
+}
+
+.error-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.6rem 1.4rem;
+    background: rgba(0,255,247,0.07);
+    border: 1px solid var(--accent-cyan);
+    border-radius: 5px;
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.error-home-btn:hover {
+    background: rgba(0,255,247,0.15);
+    box-shadow: 0 0 18px rgba(0,255,247,0.25);
+    color: var(--accent-cyan);
+}
+
+.error-404-code {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(5rem, 18vw, 12rem);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,255,247,0.12);
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .error-404-code { display: none; }
+    .error-term-body { padding: 1.2rem; }
+}
+</style>

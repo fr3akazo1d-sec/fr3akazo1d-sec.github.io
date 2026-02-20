@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Hash detected:', hash, 'Target:', targetSection);
             if (targetSection) {
                 // Scroll to position accounting for fixed header
-                const headerOffset = 80;
+                const headerOffset = 60;
                 const elementPosition = targetSection.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
                 
@@ -121,10 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageIndex++;
                 loadingStatus.textContent = loadingMessages[messageIndex];
             }
-        }, 450);
+        }, 250);
         
-        // Show loading screen for at least 4 seconds
-        const minLoadTime = 4000;
+        // Show loading screen for at least 2 seconds
+        const minLoadTime = 2000;
         const startTime = Date.now();
         
         window.addEventListener('load', () => {
@@ -175,6 +175,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // === EXPLORE DROPDOWN ===
+    const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+    const navDropdown    = document.querySelector('.nav-dropdown');
+
+    if (dropdownToggle && navDropdown) {
+        dropdownToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = navDropdown.classList.toggle('open');
+            dropdownToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (!navDropdown.contains(e.target)) {
+                navDropdown.classList.remove('open');
+                dropdownToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Close dropdown link click (also closes mobile nav)
+        navDropdown.querySelectorAll('.nav-dropdown-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenuToggle) {
+                    mobileMenuToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+                navDropdown.classList.remove('open');
+                dropdownToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navDropdown.classList.contains('open')) {
+                navDropdown.classList.remove('open');
+                dropdownToggle.setAttribute('aria-expanded', 'false');
+                dropdownToggle.focus();
+            }
+        });
+    }
     
     // === SMOOTH SCROLLING FOR ANCHOR LINKS ===
     navLinks.forEach(link => {
@@ -186,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const targetSection = document.querySelector('#' + hash);
                 if (targetSection && window.location.pathname === '/') {
                     e.preventDefault();
-                    const headerOffset = 80;
+                    const headerOffset = 60;
                     const elementPosition = targetSection.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
                     
@@ -242,7 +283,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    
+
+    // === SCROLL PROGRESS BAR ===
+    const scrollProgressBar = document.getElementById('scrollProgressBar');
+    if (scrollProgressBar) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            scrollProgressBar.style.width = pct + '%';
+        }, { passive: true });
+    }
+
     // Cursor hover effects
     if (cursor && cursorFollower) {
         const hoverElements = document.querySelectorAll('a, button, .blog-card, .project-card, .contact-card, .platform-card, .skill-category, .timeline-item, .cert-item');
@@ -681,9 +733,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // === CONSOLE EASTER EGG ===
-    console.log('%c fr3akazo1d ', 'background: #ff003c; color: #00fff7; font-size: 20px; font-weight: bold; padding: 10px;');
-    console.log('%c Root is not a privilege. It\'s a mindset. ', 'background: #00fff7; color: #10141a; font-size: 14px; padding: 5px;');
-    console.log('%c Looking for something? Check out my GitHub: https://github.com/fr3akazo1d ', 'color: #c0c0c0; font-size: 12px;');
+    console.log('%c fr3akazo1d ', 'background: #ff003c; color: #00fff7; font-size: 22px; font-weight: bold; padding: 12px; font-family: monospace;');
+    console.log('%c Root is not a privilege. It\'s a mindset. ', 'background: #00fff7; color: #10141a; font-size: 14px; padding: 6px; font-family: monospace;');
+    console.log('%c [*] Enumerating attack surface... ', 'color: #39ff14; font-size: 12px; font-family: monospace;');
+    console.log('%c [+] GitHub  : https://github.com/fr3akazo1d-sec ', 'color: #c0c0c0; font-size: 12px; font-family: monospace;');
+    console.log('%c [+] LinkedIn: https://linkedin.com/in/phil-malle ', 'color: #c0c0c0; font-size: 12px; font-family: monospace;');
+    console.log('%c [!] 6 easter eggs hidden on this site. Start digging. ', 'color: #ff003c; font-size: 12px; font-family: monospace;');
 });
 
 // === PERFORMANCE MONITORING ===
@@ -692,8 +747,277 @@ window.addEventListener('load', () => {
     console.log(`Page loaded in ${loadTime}ms`);
 });
 
+// === HERO TYPING CURSOR ===
+(function initHeroTyping() {
+    const cmdEl    = document.getElementById('heroCmd');
+    const cursorEl = document.getElementById('heroCursor');
+    if (!cmdEl || !cursorEl) return;
+
+    const COMMANDS = [
+        'nmap -sV -p- target.htb',
+        'sudo ./exploit.py --rhost 10.10.10.1',
+        'cat /etc/shadow | john --wordlist=rockyou.txt',
+        'msfconsole -q',
+        'python3 -c \'import pty; pty.spawn("/bin/bash")\'',
+        'curl -s https://api.github.com/users/fr3akazo1d-sec',
+        'hashcat -m 1000 hashes.txt rockyou.txt',
+        'gobuster dir -u http://target -w /usr/share/wordlists/dirb/common.txt',
+        'whoami && id',
+        'nc -lvnp 4444',
+    ];
+
+    let cmdIndex  = 0;
+    let charIndex = 0;
+    let deleting  = false;
+    let pauseTicks = 0;
+
+    function type() {
+        const cmd = COMMANDS[cmdIndex];
+
+        if (pauseTicks > 0) {
+            pauseTicks--;
+            setTimeout(type, 80);
+            return;
+        }
+
+        if (!deleting) {
+            cmdEl.textContent = ' ' + cmd.slice(0, ++charIndex);
+            if (charIndex === cmd.length) {
+                deleting = true;
+                pauseTicks = 28; // ~2.2s pause at full word
+            }
+            setTimeout(type, 65);
+        } else {
+            cmdEl.textContent = charIndex > 1 ? ' ' + cmd.slice(0, --charIndex) : '';
+            if (charIndex === 0) {
+                deleting = false;
+                cmdIndex = (cmdIndex + 1) % COMMANDS.length;
+                pauseTicks = 8;
+            }
+            setTimeout(type, 30);
+        }
+    }
+
+    // Wait for loading screen to finish before starting
+    setTimeout(type, 2200);
+})();
+
+// === CLICK RIPPLE HEX COORDS ===
+(function initClickRipple() {
+    document.addEventListener('click', (e) => {
+        // Skip clicks on interactive elements
+        if (e.target.closest('a, button, input, textarea, select')) return;
+
+        const el = document.createElement('div');
+        el.className = 'click-ripple';
+        el.textContent = `0x${e.clientX.toString(16).toUpperCase().padStart(4,'0')}:0x${e.clientY.toString(16).toUpperCase().padStart(4,'0')}`;
+        el.style.left = (e.clientX + 10) + 'px';
+        el.style.top  = (e.clientY - 5) + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 850);
+    });
+})();
+
+// === FAKE PACKET SNIFFER TOASTS ===
+(function initPacketToasts() {
+    let container = document.querySelector('.packet-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'packet-toast-container';
+        document.body.appendChild(container);
+    }
+
+    function randIP() {
+        return `${(Math.random()*223+1|0)}.${(Math.random()*254|0)}.${(Math.random()*254|0)}.${(Math.random()*254|0)}`;
+    }
+
+    function randHex(len) {
+        return [...Array(len)].map(() => Math.floor(Math.random()*16).toString(16)).join('').toUpperCase();
+    }
+
+    const EVENTS = [
+        (src, dst) => ({
+            warn: false,
+            lines: [`<span class="packet-toast-label">[+]</span> Intercepted TLS handshake`,
+                    `<span style="opacity:.5">${src} → ${dst}:443</span>`]
+        }),
+        (src) => ({
+            warn: true,
+            lines: [`<span class="packet-toast-label">[!]</span> Port scan detected`,
+                    `<span style="opacity:.5">SYN flood from ${src}</span>`]
+        }),
+        (src, dst) => ({
+            warn: false,
+            lines: [`<span class="packet-toast-label">[*]</span> DNS query captured`,
+                    `<span style="opacity:.5">${src} → ${dst}:53  A?</span>`]
+        }),
+        () => ({
+            warn: false,
+            lines: [`<span class="packet-toast-label">[+]</span> Session key derived`,
+                    `<span style="opacity:.5">AES-256-GCM  tag:${randHex(8)}</span>`]
+        }),
+        (src, dst) => ({
+            warn: true,
+            lines: [`<span class="packet-toast-label">[!]</span> Suspicious POST /login`,
+                    `<span style="opacity:.5">${src} → ${dst}:8080</span>`]
+        }),
+        (src) => ({
+            warn: false,
+            lines: [`<span class="packet-toast-label">[*]</span> SSH auth attempt`,
+                    `<span style="opacity:.5">root@${src}  pubkey</span>`]
+        }),
+    ];
+
+    function showToast() {
+        const fn  = EVENTS[Math.floor(Math.random() * EVENTS.length)];
+        const evt = fn(randIP(), randIP());
+
+        const toast = document.createElement('div');
+        toast.className = 'packet-toast' + (evt.warn ? ' packet-toast-warn' : '');
+        toast.innerHTML = evt.lines.join('<br>');
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 5200);
+    }
+
+    // First toast after 45s, then every 90–150s
+    setTimeout(function loop() {
+        showToast();
+        setTimeout(loop, 90000 + Math.random() * 60000);
+    }, 45000);
+})();
+
+// === HUD WIDGET ===
+(function initHUD() {
+    const timeEl   = document.getElementById('hud-time');
+    const uptimeEl = document.getElementById('hud-uptime');
+    if (!timeEl || !uptimeEl) return;
+
+    const startTime = Date.now();
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick() {
+        const now = new Date();
+        timeEl.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const m = Math.floor(elapsed / 60);
+        const s = elapsed % 60;
+        uptimeEl.textContent = `${pad(m)}:${pad(s)}`;
+    }
+
+    tick();
+    setInterval(tick, 1000);
+})();
+
+// === GLITCH FLICKER ON SECTION ENTRY ===
+(function initGlitchEntry() {
+    const titles = document.querySelectorAll('.section-title');
+    if (!titles.length || !('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.dataset.glitched) {
+                entry.target.dataset.glitched = '1';
+                entry.target.classList.add('glitch-enter');
+                setTimeout(() => entry.target.classList.remove('glitch-enter'), 620);
+            }
+        });
+    }, { threshold: 0.25 });
+
+    titles.forEach(t => observer.observe(t));
+})();
+
+// === GITHUB LIVE REPOS ===
+(async function initGitHub() {
+    const grid    = document.getElementById('githubReposGrid');
+    const ghRepos = document.getElementById('ghRepos');
+    const ghFollowers = document.getElementById('ghFollowers');
+    const ghFollowing = document.getElementById('ghFollowing');
+    if (!grid) return;
+
+    const USER = 'fr3akazo1d-sec';
+    const LANG_COLORS = {
+        Python: '#3572A5', JavaScript: '#f1e05a', TypeScript: '#3178c6',
+        'C++': '#f34b7d', C: '#555555', 'C#': '#178600', Ruby: '#701516',
+        Go: '#00ADD8', Rust: '#dea584', Shell: '#89e051', PowerShell: '#012456',
+        Java: '#b07219', Kotlin: '#A97BFF', Swift: '#F05138',
+        HTML: '#e34c26', CSS: '#563d7c', PHP: '#4F5D95',
+    };
+
+    function timeAgo(dateStr) {
+        const diff = Date.now() - new Date(dateStr);
+        const d = Math.floor(diff / 86400000);
+        if (d < 1)  return 'today';
+        if (d < 7)  return d + 'd ago';
+        if (d < 30) return Math.floor(d / 7) + 'w ago';
+        if (d < 365) return Math.floor(d / 30) + 'mo ago';
+        return Math.floor(d / 365) + 'y ago';
+    }
+
+    function repoCard(r) {
+        const langColor = LANG_COLORS[r.language] || '#c0c0c0';
+        const langHtml = r.language
+            ? `<span class="github-repo-lang"><span class="github-lang-dot" style="background:${langColor}"></span>${r.language}</span>`
+            : '';
+        return `
+        <a href="${r.html_url}" target="_blank" rel="noopener noreferrer"
+           class="github-repo-card${r.fork ? ' github-repo-fork' : ''}">
+            <div class="github-repo-name">
+                <svg viewBox="0 0 16 16" fill="currentColor" width="15" height="15">
+                    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 1 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8Z"/>
+                </svg>
+                ${r.name}
+            </div>
+            ${r.description ? `<div class="github-repo-description">${r.description}</div>` : '<div class="github-repo-description" style="opacity:0.4;font-style:italic">No description</div>'}
+            <div class="github-repo-meta">
+                ${langHtml}
+                <span class="github-repo-stars">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    ${r.stargazers_count}
+                </span>
+                <span class="github-repo-forks">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/>
+                        <circle cx="6" cy="18" r="3"/><circle cx="6" cy="6" r="3"/>
+                        <path d="M18 9a9 9 0 0 1-9 9"/>
+                    </svg>
+                    ${r.forks_count}
+                </span>
+                <span class="github-repo-updated">${timeAgo(r.pushed_at)}</span>
+            </div>
+        </a>`;
+    }
+
+    try {
+        const [userRes, repoRes] = await Promise.all([
+            fetch(`https://api.github.com/users/${USER}`),
+            fetch(`https://api.github.com/users/${USER}/repos?sort=pushed&per_page=6&type=public`)
+        ]);
+
+        if (userRes.ok) {
+            const u = await userRes.json();
+            if (ghRepos)      ghRepos.textContent     = u.public_repos;
+            if (ghFollowers)  ghFollowers.textContent = u.followers;
+            if (ghFollowing)  ghFollowing.textContent = u.following;
+        }
+
+        if (!repoRes.ok) throw new Error('repos fetch failed');
+        const repos = await repoRes.json();
+
+        if (!repos.length) {
+            grid.innerHTML = '<div class="github-loading">No public repositories found.</div>';
+            return;
+        }
+
+        grid.innerHTML = repos.map(repoCard).join('');
+    } catch (err) {
+        grid.innerHTML = `<div class="github-error">root@github:~# <span style="color:var(--accent-red)">ERROR:</span> Could not fetch repositories. View them directly on <a href="https://github.com/${USER}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-cyan)">GitHub</a>.</div>`;
+    }
+})();
+
 // === EASTER EGGS ===
-console.log('%c🎮 Easter eggs loaded! Try: Konami Code, typing "root", or triple-clicking the logo', 'color: #39ff14; font-size: 12px;');
+console.log('%c[SYSTEM] 6 easter eggs loaded. Hints: Konami Code \u2191\u2191\u2193\u2193\u2190\u2192\u2190\u2192BA | type "root" | type "nmap" | type "sudo" | triple-click the logo | Ctrl+Shift+H', 'color: #39ff14; font-size: 11px; font-family: monospace;');
 
 // 1. Konami Code Easter Egg
 let konamiCode = [];
@@ -781,16 +1105,25 @@ function activateKonamiMode() {
     konamiCode = [];
 }
 
-// 2. Type "root" Easter Egg
+// 2. Keyword Easter Eggs — type "root", "nmap", or "sudo" anywhere on the page
 let typedKeys = [];
-const rootSequence = ['r', 'o', 'o', 't'];
 
 document.addEventListener('keypress', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     typedKeys.push(e.key.toLowerCase());
-    typedKeys = typedKeys.slice(-4);
-    
-    if (typedKeys.join('') === rootSequence.join('')) {
-        activateRootMode();
+    typedKeys = typedKeys.slice(-6);
+
+    const typed = typedKeys.join('');
+    if (typed.endsWith('root')) { typedKeys = []; activateRootMode(); }
+    else if (typed.endsWith('nmap')) { typedKeys = []; activateNmapEasterEgg(); }
+    else if (typed.endsWith('sudo')) { typedKeys = []; activateSudoEasterEgg(); }
+});
+
+// Secret Terminal: Ctrl+Shift+H
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'H') {
+        e.preventDefault();
+        openSecretTerminal();
     }
 });
 
@@ -896,7 +1229,8 @@ function activateLogoEasterEgg() {
                     box-shadow: 0 0 50px rgba(57, 255, 20, 0.4);">
             <h3 style="color: var(--accent-green); margin-bottom: 1rem;">🎯 Secret Found! 🎯</h3>
             <p style="color: var(--text-bright);">You're curious... I like that.</p>
-            <p style="color: var(--accent-cyan); margin-top: 0.5rem; font-size: 0.875rem;">Try typing "root" or the Konami Code!</p>
+            <p style="color: var(--accent-cyan); margin-top: 0.5rem; font-size: 0.875rem;">Try: Konami Code | type "root" | type "nmap" | type "sudo"</p>
+            <p style="color: var(--accent-red); margin-top: 0.4rem; font-size: 0.8rem;">...or press <kbd style="background:rgba(0,255,247,0.1);border:1px solid var(--accent-cyan);border-radius:3px;padding:1px 5px">Ctrl+Shift+H</kbd> 🤫</p>
         </div>
     `;
     document.body.appendChild(secret);
@@ -909,7 +1243,7 @@ function activateLogoEasterEgg() {
 }
 
 // 4. Console Message Easter Egg
-console.log('%c🔍 HINT: Try triple-clicking the logo!', 'color: #39ff14; font-size: 12px; font-style: italic;');
+console.log('%c🔍 HINT: Try triple-clicking the logo, then keep exploring...', 'color: #39ff14; font-size: 12px; font-style: italic; font-family: monospace;');
 
 // 5. Fake Hacking Progress Bar
 const hackButton = document.getElementById('hackButton');
@@ -1224,3 +1558,170 @@ if (hackButton) {
     });
 }
 
+// ============================================================
+// NEW EASTER EGGS
+// ============================================================
+
+// 6. Type "nmap" — fake port scan notification
+function activateNmapEasterEgg() {
+    if (document.querySelector('#nmap-egg')) return;
+    const lines = [
+        'Starting Nmap 7.95 ( https://nmap.org )',
+        'Nmap scan report for localhost (127.0.0.1)',
+        'Host is up (0.000013s latency).',
+        '',
+        'PORT      STATE    SERVICE',
+        '22/tcp    filtered ssh',
+        '80/tcp    open     http',
+        '443/tcp   open     https',
+        '1337/tcp  open     hacker-mode',
+        '31337/tcp open     l33t',
+        '4444/tcp  open     metasploit',
+        '',
+        'Nmap done: 1 IP scanned in 0.42 seconds',
+        '',
+        '[!] Nice recon. You found the nmap easter egg.',
+    ];
+    const box = document.createElement('div');
+    box.id = 'nmap-egg';
+    box.style.cssText = 'position:fixed;bottom:2rem;left:2rem;z-index:100000;background:var(--bg-secondary);border:1px solid var(--accent-cyan);border-radius:8px;overflow:hidden;font-family:\'JetBrains Mono\',monospace;box-shadow:0 0 30px rgba(0,255,247,0.4);max-width:460px';
+    box.innerHTML = `
+        <div style="background:#0a0e14;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(0,255,247,.2)">
+            <span style="width:10px;height:10px;border-radius:50%;background:#ff5f56;display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#ffbd2e;display:inline-block"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#27c93f;display:inline-block"></span>
+            <span style="color:var(--text-main);font-size:.8rem;margin-left:.5rem">nmap-scan.sh</span>
+        </div>
+        <div id="nmap-out" style="padding:1rem;color:var(--accent-cyan);font-size:.8rem;line-height:1.7;min-height:60px;white-space:pre"></div>
+    `;
+    document.body.appendChild(box);
+    const out = box.querySelector('#nmap-out');
+    let i = 0;
+    const iv = setInterval(() => {
+        if (i < lines.length) { out.textContent += lines[i++] + '\n'; }
+        else {
+            clearInterval(iv);
+            setTimeout(() => {
+                box.style.opacity = '0'; box.style.transition = 'opacity .5s';
+                setTimeout(() => box.remove(), 500);
+            }, 4000);
+        }
+    }, 160);
+}
+
+// 7. Type "sudo" — permission denied toast
+function activateSudoEasterEgg() {
+    if (document.querySelector('#sudo-egg')) return;
+    const toast = document.createElement('div');
+    toast.id = 'sudo-egg';
+    toast.style.cssText = 'position:fixed;top:5rem;right:2rem;z-index:100000;background:var(--bg-secondary);border:1px solid var(--accent-red);border-radius:8px;padding:1.2rem 1.5rem;font-family:\'JetBrains Mono\',monospace;box-shadow:0 0 30px rgba(255,0,60,0.4);max-width:420px';
+    toast.innerHTML = `
+        <div style="color:var(--text-bright);font-size:.85rem;margin-bottom:.4rem">fr3akazo1d@localhost:~$ <span style="color:var(--accent-cyan)">sudo rm -rf /</span></div>
+        <div style="color:var(--text-main);font-size:.85rem;margin-bottom:.4rem">[sudo] password for fr3akazo1d: <span style="color:transparent;user-select:none">hunter2</span></div>
+        <div style="color:var(--accent-red);font-size:.85rem;margin-bottom:.2rem">sudo: permission denied.</div>
+        <div style="color:var(--accent-red);font-size:.85rem;margin-bottom:.6rem">This incident will be reported to /dev/null.</div>
+        <div style="color:var(--accent-cyan);font-size:.85rem">Nice try. \uD83D\uDE08</div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0'; toast.style.transition = 'opacity .5s';
+        setTimeout(() => toast.remove(), 500);
+    }, 5000);
+}
+
+// 8. Secret Terminal — Ctrl+Shift+H
+function openSecretTerminal() {
+    const existing = document.querySelector('#secret-terminal-modal');
+    if (existing) { existing.remove(); return; }
+
+    const CMDS = {
+        help:          () => 'Available commands:\n  whoami       current user\n  id           uid/gid info\n  ls | ls -la  list files\n  cat [file]   read a file\n  pwd          working directory\n  uname -a     kernel info\n  date         current time\n  history      command log\n  clear        clear screen\n  exit         close terminal\n\n[HINT] Some files might be interesting...',
+        whoami:        () => 'fr3akazo1d',
+        id:            () => 'uid=0(root) gid=0(root) groups=0(root),1337(elite-haxors)',
+        pwd:           () => '/root/secrets',
+        ls:            () => 'flag.txt   README.md   exploits/   tools/   .secrets',
+        'ls -la':      () => 'total 1337\n-rw-r--r--  fr3akazo1d root  flag.txt\n-rw-r--r--  fr3akazo1d root  README.md\ndrwxr-xr-x  fr3akazo1d root  exploits/\ndrwxr-xr-x  fr3akazo1d root  tools/\n-rwx------  fr3akazo1d root  .secrets',
+        'cat flag.txt':      () => '\x1b[31mFLAG{y0u_f0und_th3_53cr3t_t3rm1n4l_w3lc0m3_h4ck3r_2026}\x1b[0m\n\nCongratulations. You are exactly the kind of person\nwho reads source code and pokes at hidden things.\nThat is the hacker mindset. \uD83D\uDDA4',
+        'cat readme.md':     () => '# fr3akazo1d\n\n"Sometimes I feel like giving up, then I remember\n I have a lot of people to prove wrong."\n\nRed Team Operator & Security Researcher.',
+        'cat .secrets':      () => 'cat: .secrets: Permission denied',
+        'cat /etc/passwd':   () => 'root:x:0:0:root:/root:/bin/bash\nfr3akazo1d:x:1337:1337::/home/fr3akazo1d:/bin/zsh\nnobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin',
+        'uname':       () => 'Linux',
+        'uname -a':    () => 'Linux fr3akazo1d-root 6.6.6-l33t #1 SMP PREEMPT hax0r 2025 x86_64 GNU/Linux',
+        date:          () => new Date().toString(),
+        history:       () => '  1  nmap -sS 10.0.0.0/24\n  2  ssh root@target\n  3  sudo su -\n  4  cat /etc/shadow\n  5  john --wordlist=rockyou.txt hashes.txt\n  6  msfconsole\n  7  cat flag.txt\n  8  rm -rf /var/log/*\n  9  history -c',
+        exit:          () => '__EXIT__',
+        clear:         () => '__CLEAR__',
+    };
+
+    const hist = [];
+    let hidx = -1;
+    const CYAN = 'var(--accent-cyan)', RED = 'var(--accent-red)';
+
+    const modal = document.createElement('div');
+    modal.id = 'secret-terminal-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:200000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.88);backdrop-filter:blur(4px)';
+    modal.innerHTML = `
+        <div style="width:min(720px,92vw);background:var(--bg-secondary);border:1px solid var(--accent-cyan);border-radius:12px;overflow:hidden;box-shadow:0 0 60px rgba(0,255,247,.35);display:flex;flex-direction:column;max-height:82vh">
+            <div style="background:#0a0e14;padding:.7rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(0,255,247,.2);flex-shrink:0">
+                <span id="st-x" style="width:12px;height:12px;border-radius:50%;background:#ff5f56;display:inline-block;cursor:pointer"></span>
+                <span style="width:12px;height:12px;border-radius:50%;background:#ffbd2e;display:inline-block"></span>
+                <span style="width:12px;height:12px;border-radius:50%;background:#27c93f;display:inline-block"></span>
+                <span style="color:var(--accent-cyan);font-size:.82rem;margin-left:.75rem;font-family:'JetBrains Mono',monospace">fr3akazo1d@root:~# \u2014 SECRET TERMINAL</span>
+                <span style="margin-left:auto;color:rgba(192,192,192,.45);font-size:.72rem;font-family:'JetBrains Mono',monospace">Ctrl+Shift+H to close</span>
+            </div>
+            <div id="st-out" style="flex:1;overflow-y:auto;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:.83rem;line-height:1.8;color:var(--text-main);min-height:260px"></div>
+            <div style="display:flex;align-items:center;padding:.5rem 1rem;border-top:1px solid rgba(0,255,247,.2);background:#0a0e14;flex-shrink:0">
+                <span style="color:${RED};font-family:'JetBrains Mono',monospace;font-size:.83rem;margin-right:.5rem;white-space:nowrap">fr3akazo1d@root:~#</span>
+                <input id="st-in" type="text" autocomplete="off" spellcheck="false" style="flex:1;background:transparent;border:none;outline:none;color:${CYAN};font-family:'JetBrains Mono',monospace;font-size:.83rem;caret-color:${CYAN}">
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+
+    const outEl = modal.querySelector('#st-out');
+    const inpEl = modal.querySelector('#st-in');
+
+    function ansi(t) {
+        return t
+            .replace(/\x1b\[31m/g, `<span style="color:${RED}">`)
+            .replace(/\x1b\[0m/g,  '</span>')
+            .replace(/\n/g, '<br>');
+    }
+    function print(html, color) {
+        const d = document.createElement('div');
+        if (color) d.style.color = color;
+        d.innerHTML = html;
+        outEl.appendChild(d);
+        outEl.scrollTop = outEl.scrollHeight;
+    }
+    function printCmd(cmd) {
+        print(`<span style="color:${RED}">fr3akazo1d@root:~#</span> <span style="color:${CYAN}">${cmd}</span>`);
+    }
+
+    print(`<span style="color:${CYAN};font-size:1rem;font-weight:700">Secret Terminal v1.337</span>`);
+    print(`<span style="color:rgba(192,192,192,.6);font-size:.78rem">Type <span style="color:${CYAN}">help</span> for commands. There might be something interesting here...</span>`);
+    print('');
+    setTimeout(() => inpEl.focus(), 50);
+
+    function run(raw) {
+        const cmd = raw.trim().toLowerCase();
+        if (!cmd) return;
+        hist.unshift(cmd); hidx = -1;
+        printCmd(cmd);
+        const fn = CMDS[cmd];
+        const res = fn ? fn() : `bash: ${cmd}: command not found`;
+        if (res === '__EXIT__')  { modal.remove(); return; }
+        if (res === '__CLEAR__') { outEl.innerHTML = ''; return; }
+        if (res) print(ansi(res));
+    }
+
+    inpEl.addEventListener('keydown', (e) => {
+        e.stopPropagation();
+        if (e.key === 'Enter')       { run(inpEl.value); inpEl.value = ''; }
+        else if (e.key === 'Escape')  { modal.remove(); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); if (hidx < hist.length - 1) inpEl.value = hist[++hidx]; }
+        else if (e.key === 'ArrowDown') { e.preventDefault(); inpEl.value = --hidx >= 0 ? hist[hidx] : (hidx = -1, ''); }
+    });
+    modal.querySelector('#st-x').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    inpEl.addEventListener('click', (e) => e.stopPropagation());
+}

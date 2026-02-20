@@ -1,0 +1,36 @@
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" aria-label="Toggle navigation">
+    <span class="mob-toggle-text">[&gt;_]</span>
+    <span class="mob-toggle-close" aria-hidden="true">[ x ]</span>
+</button>
+
+<nav class="nav-menu">
+    <span class="nav-prompt" aria-hidden="true"><span class="nav-prompt-user">root</span><span class="nav-prompt-at">@</span><span class="nav-prompt-host">fr3akazo1d</span><span class="nav-prompt-suffix">:~#</span></span>
+    <ul>
+        <li><a href="{{ site.baseurl }}/" class="nav-link">Home</a></li>
+        <li><a href="{{ site.baseurl }}/index.html#about" class="nav-link">About</a></li>
+        <li><a href="{{ site.baseurl }}/index.html#skills" class="nav-link">Skills</a></li>
+        <li><a href="{{ site.baseurl }}/index.html#career" class="nav-link">Career</a></li>
+        <li><a href="{{ site.baseurl }}/index.html#blog" class="nav-link">Blog</a></li>
+        <li><a href="{{ site.baseurl }}/index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="{{ site.baseurl }}/index.html#github" class="nav-link">GitHub</a></li>
+        <li class="nav-dropdown">
+            <button class="nav-dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                Explore
+                <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+            <ul class="nav-dropdown-menu" role="menu">
+                <li role="none"><a href="{{ site.baseurl }}/conferences/" class="nav-dropdown-link" role="menuitem">Conferences</a></li>
+                <li role="none"><a href="{{ site.baseurl }}/gallery/" class="nav-dropdown-link" role="menuitem">Gallery</a></li>
+                <li role="none"><a href="{{ site.baseurl }}/calendar/" class="nav-dropdown-link" role="menuitem">Calendar</a></li>
+                <li role="none"><a href="{{ site.baseurl }}/archive/" class="nav-dropdown-link" role="menuitem">Archive</a></li>
+                <li role="none"><a href="{{ site.baseurl }}/tags/" class="nav-dropdown-link" role="menuitem">Tags</a></li>
+                <li role="none"><a href="{{ site.baseurl }}/resources/" class="nav-dropdown-link" role="menuitem">Resources</a></li>
+            </ul>
+        </li>
+        <li><a href="{{ site.baseurl }}/index.html#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <span class="nav-status" aria-hidden="true"><span class="nav-status-dot"></span>ONLINE</span>
+</nav>
