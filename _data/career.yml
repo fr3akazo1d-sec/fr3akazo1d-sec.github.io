@@ -244,6 +244,18 @@ experiences:
 # Certifications
 # Add your certifications with date obtained
 certifications:
+  - name: GRTP
+    full_name: GIAC Red Team Proffessional
+    issuer: GIAC Certifications
+    date: 2026-01
+    credential_id: 819
+
+  - name: PT1
+    full_name: Junior Penetration Tester
+    issuer: TryHackMe
+    date: 2025-11
+    credential_id: 
+
   - name: eJPT
     full_name: Junior Penetration Tester
     issuer: INE
