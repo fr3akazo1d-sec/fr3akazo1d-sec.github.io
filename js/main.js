@@ -732,6 +732,108 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // === SECURITY: enforce noopener noreferrer on all external links ===
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
+        if (link.hostname !== location.hostname) {
+            link.setAttribute('target', '_blank');
+            const rel = link.getAttribute('rel') || '';
+            if (!rel.includes('noopener')) {
+                link.setAttribute('rel', (rel + ' noopener noreferrer').trim());
+            }
+        }
+    });
+
+    // === TABLE OF CONTENTS ===
+    (function initTOC() {
+        const tocNav      = document.getElementById('tocNav');
+        const tocSidebar  = document.getElementById('tocSidebar');
+        const collapseBtn = document.getElementById('tocCollapse');
+        const filenameEl  = document.getElementById('tocFilename');
+        if (!tocNav || !tocSidebar) return;
+
+        // Inject filename into header
+        if (filenameEl && tocSidebar.dataset.slug) {
+            filenameEl.textContent = tocSidebar.dataset.slug;
+        }
+
+        const postContent = document.getElementById('postContent') || document.querySelector('.post-content');
+        if (!postContent) return;
+
+        const headings = Array.from(postContent.querySelectorAll('h2, h3'));
+        if (headings.length < 2) { tocSidebar.style.display = 'none'; return; }
+
+        // Ensure each heading has a stable ID
+        headings.forEach((h, i) => { if (!h.id) h.id = 'section-' + i; });
+
+        // Build ls -la style list
+        const total = document.createElement('div');
+        total.className = 'ls-total';
+        total.textContent = `total ${headings.length}`;
+        tocNav.appendChild(total);
+
+        const ul = document.createElement('ul');
+        ul.className = 'toc-list';
+        headings.forEach(h => {
+            const isDir = h.tagName === 'H2';
+            const name  = h.textContent.replace(/^#+\s*/, '').trim();
+
+            const li = document.createElement('li');
+            li.className = `toc-item toc-item--${h.tagName.toLowerCase()}`;
+
+            const meta = document.createElement('span');
+            meta.className = 'ls-meta';
+            meta.innerHTML = `<span class="ls-perm">${isDir ? 'drwxr-xr-x' : '-rw-r--r--'}</span> <span class="ls-owner">root</span> `;
+
+            const link = document.createElement('a');
+            link.className = `toc-link toc-${h.tagName.toLowerCase()}`;
+            link.href = '#' + h.id;
+            link.textContent = isDir ? name + '/' : name;
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const top = h.getBoundingClientRect().top + window.pageYOffset - 75;
+                window.scrollTo({ top, behavior: 'smooth' });
+                history.pushState(null, '', '#' + h.id);
+            });
+
+            li.appendChild(meta);
+            li.appendChild(link);
+            ul.appendChild(li);
+        });
+        tocNav.appendChild(ul);
+
+        // Highlight active section as user scrolls
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                const link = tocNav.querySelector(`a[href="#${entry.target.id}"]`);
+                if (link) {
+                    link.classList.toggle('active', entry.isIntersecting);
+                    link.closest('.toc-item')?.classList.toggle('active', entry.isIntersecting);
+                }
+            });
+        }, { rootMargin: '-60px 0px -65% 0px', threshold: 0 });
+
+        headings.forEach(h => observer.observe(h));
+
+        // Collapse / expand via button or clicking the header
+        function toggleCollapse(e) {
+            if (e) e.stopPropagation();
+            const collapsed = tocSidebar.classList.toggle('collapsed');
+            if (collapseBtn) collapseBtn.textContent = collapsed ? '+' : '−';
+        }
+
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', toggleCollapse);
+        }
+
+        const tocHeader = document.getElementById('tocHeader');
+        if (tocHeader) {
+            tocHeader.addEventListener('click', (e) => {
+                // only fire if clicking the header itself, not a link inside it
+                if (!e.target.closest('a')) toggleCollapse();
+            });
+        }
+    })();
+
     // === CONSOLE EASTER EGG ===
     console.log('%c fr3akazo1d ', 'background: #ff003c; color: #00fff7; font-size: 22px; font-weight: bold; padding: 12px; font-family: monospace;');
     console.log('%c Root is not a privilege. It\'s a mindset. ', 'background: #00fff7; color: #10141a; font-size: 14px; padding: 6px; font-family: monospace;');
@@ -1725,3 +1827,298 @@ function openSecretTerminal() {
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     inpEl.addEventListener('click', (e) => e.stopPropagation());
 }
+
+// ============================================================
+// === HACKER FEATURES (Matrix Rain, Visitor Scan, Threat Feed)
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+
+// ---- MATRIX RAIN CANVAS ----
+(function initMatrixRain() {
+    const canvas = document.getElementById('matrixRain');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const CHARS = '0123456789ABCDEF';
+    const FONT_SIZE = 13;
+    let cols, drops;
+
+    function resize() {
+        canvas.width  = canvas.offsetWidth  || canvas.parentElement.offsetWidth;
+        canvas.height = canvas.offsetHeight || canvas.parentElement.offsetHeight;
+        cols  = Math.floor(canvas.width / FONT_SIZE);
+        drops = new Array(cols).fill(0).map(() => Math.random() * -50);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    function draw() {
+        // Semi-transparent fill creates the fading trail
+        ctx.fillStyle = 'rgba(16, 20, 26, 0.06)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = `${FONT_SIZE}px 'JetBrains Mono', monospace`;
+
+        for (let i = 0; i < cols; i++) {
+            const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+            const y    = drops[i] * FONT_SIZE;
+
+            // Bright lead character
+            if (drops[i] > 0 && Math.random() > 0.92) {
+                ctx.fillStyle = '#ffffff';
+            } else {
+                const alpha = 0.08 + Math.random() * 0.55;
+                ctx.fillStyle = `rgba(0, 255, 247, ${alpha})`;
+            }
+
+            ctx.fillText(char, i * FONT_SIZE, y);
+
+            if (y > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i] += 0.5;
+        }
+    }
+
+    setInterval(draw, 55);
+})();
+
+// ---- VISITOR RECON SCAN TERMINAL ----
+(async function initVisitorScan() {
+    const overlay  = document.getElementById('visitorScan');
+    if (!overlay) return;
+
+    // Only on homepage, only once per session
+    const isHome = ['/', '/index.html', ''].includes(window.location.pathname);
+    if (!isHome || sessionStorage.getItem('visitorScanShown')) return;
+    sessionStorage.setItem('visitorScanShown', 'true');
+
+    const body     = document.getElementById('visitorScanBody');
+    const closeBtn = overlay.querySelector('.visitor-scan-close');
+
+    // ── Collect real browser fingerprint data ──
+    const ua     = navigator.userAgent;
+    let os = 'Unknown OS';
+    if      (/Windows NT 1[0-9]/.test(ua))    os = 'Windows 10/11';
+    else if (/Windows NT 6/.test(ua))          os = 'Windows 7/8';
+    else if (/Mac OS X/.test(ua))              os = 'macOS';
+    else if (/Android/.test(ua))               os = 'Android';
+    else if (/iPhone|iPad/.test(ua))           os = 'iOS';
+    else if (/Linux/.test(ua))                 os = 'Linux';
+
+    let browser = 'Unknown';
+    if      (/Firefox\//.test(ua))  browser = 'Firefox';
+    else if (/Edg\//.test(ua))      browser = 'Edge';
+    else if (/Chrome\//.test(ua))   browser = 'Chrome';
+    else if (/Safari\//.test(ua))   browser = 'Safari';
+
+    const resolution = `${window.screen.width}x${window.screen.height}`;
+    const lang       = navigator.language || 'Unknown';
+    const tz         = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+    const cpu        = navigator.hardwareConcurrency || '?';
+
+    // Try to get real IP + country
+    let ip      = '██.██.██.██';
+    let country = '';
+    try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 3000);
+        const resp  = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+        clearTimeout(timer);
+        const data  = await resp.json();
+        if (data.ip)           ip      = data.ip;
+        if (data.country_name) country = ` (${data.country_name})`;
+    } catch (_) { /* silently fail */ }
+
+    const lines = [
+        { text: '[*] Initiating visitor reconnaissance...', delay: 0,    color: 'cyan'  },
+        { text: `[*] Target host   : ${window.location.hostname}`,       delay: 500,  color: 'text'  },
+        { text: '[*] Scanning incoming connection...',                    delay: 950,  color: 'cyan'  },
+        { text: `[+] IP Address    : ${ip}${country}`,                   delay: 1500, color: 'green' },
+        { text: `[+] OS            : ${os}`,                             delay: 1900, color: 'green' },
+        { text: `[+] Browser       : ${browser}`,                        delay: 2200, color: 'green' },
+        { text: `[+] Resolution    : ${resolution}`,                     delay: 2500, color: 'green' },
+        { text: `[+] Language      : ${lang}`,                           delay: 2800, color: 'green' },
+        { text: `[+] Timezone      : ${tz}`,                             delay: 3100, color: 'green' },
+        { text: `[+] CPU Cores     : ${cpu}`,                            delay: 3400, color: 'green' },
+        { text: '',                                                       delay: 3700, color: 'text'  },
+        { text: '[*] Running exploit modules...',                         delay: 3800, color: 'cyan'  },
+        { text: '[!] CVE-2024-1337  ........... PATCHED',                delay: 4200, color: 'red'   },
+        { text: '[!] CVE-2025-0013  ........... PATCHED',                delay: 4500, color: 'red'   },
+        { text: '[*] Attempting privilege escalation...',                 delay: 4900, color: 'cyan'  },
+        { text: '[-] sudo: permission denied.',                          delay: 5350, color: 'red'   },
+        { text: '',                                                       delay: 5600, color: 'text'  },
+        { text: '// Just kidding — welcome to my site, hacker. 😈',      delay: 5750, color: 'cyan'  },
+        { text: '[+] ACCESS GRANTED',                                    delay: 6100, color: 'green' },
+    ];
+
+    function close() {
+        overlay.classList.remove('show');
+        setTimeout(() => { if (overlay.parentNode) overlay.style.display = 'none'; }, 450);
+    }
+
+    // Show after loading screen has had time to finish
+    setTimeout(() => {
+        overlay.classList.add('show');
+
+        lines.forEach(({ text, delay, color }) => {
+            setTimeout(() => {
+                const line = document.createElement('div');
+                line.className = `scan-line scan-line--${color}`;
+                line.textContent = text;
+                body.appendChild(line);
+                body.scrollTop = body.scrollHeight;
+            }, delay);
+        });
+
+        // Auto-close ~1 s after last line
+        setTimeout(close, lines[lines.length - 1].delay + 1200);
+    }, 2800);
+
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+})();
+
+// ---- SECURITY NEWS FEED (The Hacker News via rss2json) ----
+(function initSecFeed() {
+    const feed      = document.getElementById('threatFeed');
+    const feedBody  = document.getElementById('threatFeedBody');
+    const toggle    = document.getElementById('threatFeedToggle');
+    const refreshBtn= document.getElementById('threatFeedRefresh');
+    if (!feed || !feedBody || !toggle) return;
+
+    const RSS_URL   = 'https://thehackernews.com/feeds/posts/default';
+    const API       = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+    const REFRESH_MS = 10 * 60 * 1000; // auto-refresh every 10 min
+    let minimized    = false;
+
+    function timeAgo(dateStr) {
+        const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+        if (diff < 60)                  return `${diff}s ago`;
+        if (diff < 3600)                return `${Math.floor(diff / 60)}m ago`;
+        if (diff < 86400)               return `${Math.floor(diff / 3600)}h ago`;
+        return `${Math.floor(diff / 86400)}d ago`;
+    }
+
+    function setStatus(msg) {
+        feedBody.innerHTML = `<div class="sec-feed-status">${msg}</div>`;
+    }
+
+    function render(items) {
+        feedBody.innerHTML = '';
+        items.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'sec-article';
+            el.innerHTML = `
+                <a class="sec-article-link" href="${item.link}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+                <div class="sec-article-meta">
+                    <span class="sec-article-meta-age">${timeAgo(item.pubDate)}</span>
+                </div>`;
+            feedBody.appendChild(el);
+        });
+    }
+
+    async function fetchFeed() {
+        if (refreshBtn) {
+            refreshBtn.classList.add('spinning');
+            setTimeout(() => refreshBtn.classList.remove('spinning'), 650);
+        }
+        setStatus('fetching...');
+        try {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 8000);
+            const resp  = await fetch(API, { signal: controller.signal });
+            clearTimeout(timer);
+            const data  = await resp.json();
+            if (data.status === 'ok' && data.items && data.items.length) {
+                render(data.items);
+            } else {
+                setStatus('no articles found');
+            }
+        } catch (e) {
+            setStatus(e.name === 'AbortError' ? 'timeout — retry ↺' : 'offline — retry ↺');
+        }
+    }
+
+    // Initial load
+    fetchFeed();
+
+    // Auto-refresh
+    setInterval(fetchFeed, REFRESH_MS);
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // don't trigger header toggle
+            fetchFeed();
+        });
+    }
+
+    function doToggle() {
+        minimized = !minimized;
+        feed.classList.toggle('minimized', minimized);
+        toggle.textContent = minimized ? '+' : '_';
+    }
+
+    // Whole header toggles the panel
+    const header = feed.querySelector('.threat-feed-header');
+    if (header) header.addEventListener('click', doToggle);
+
+    // Keep standalone button working too (stopPropagation so it doesn't double-fire)
+    toggle.addEventListener('click', (e) => { e.stopPropagation(); doToggle(); });
+})();
+
+// ---- DECRYPT EFFECT ON SECTION TITLES ----
+(function initDecryptTitles() {
+    const CHARSET   = '0123456789ABCDEF#@!%?<>/\\|~^$&*[]';
+    const FRAME_MS  = 35;   // interval between scramble frames
+    const LOCK_RATE = 6;    // scramble frames before each char locks in
+
+    function decrypt(el) {
+        if (el.dataset.decrypted) return;
+        el.dataset.decrypted = 'true';
+
+        const original = el.textContent;
+        const len      = original.length;
+        let locked     = 0;
+        let frame      = 0;
+
+        // Suppress glitch pseudo-elements while decrypting
+        el.classList.add('decrypting');
+
+        const iv = setInterval(() => {
+            let out = '';
+            for (let i = 0; i < len; i++) {
+                if (i < locked || original[i] === ' ') {
+                    out += original[i];
+                } else {
+                    out += CHARSET[Math.floor(Math.random() * CHARSET.length)];
+                }
+            }
+            el.textContent = out;
+
+            if (frame % LOCK_RATE === 0 && locked < len) locked++;
+            frame++;
+
+            if (locked >= len) {
+                clearInterval(iv);
+                el.textContent = original;
+                el.classList.remove('decrypting');
+            }
+        }, FRAME_MS);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Small delay so the user sees the scramble start
+                setTimeout(() => decrypt(entry.target), 120);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.35 });
+
+    document.querySelectorAll('.section-title').forEach(el => observer.observe(el));
+})();
+
+}); // end DOMContentLoaded

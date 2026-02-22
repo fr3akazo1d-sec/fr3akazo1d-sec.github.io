@@ -6,6 +6,9 @@ description: Red Team Operator & Security Researcher specializing in adversary e
 
     <!-- Header Section -->
     <header id="home">
+        <!-- Matrix Rain Background -->
+        <canvas id="matrixRain" class="matrix-rain-canvas" aria-hidden="true"></canvas>
+
         <div class="header-container">
             <div class="logo-container">
                 <div class="logo glitch" data-text="F!">
@@ -70,6 +73,32 @@ description: Red Team Operator & Security Researcher specializing in adversary e
         </button>
     </header>
     
+    <!-- Visitor Recon Scan Overlay -->
+    <div id="visitorScan" class="visitor-scan-overlay" aria-hidden="true">
+        <div class="visitor-scan-terminal">
+            <div class="terminal-header">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">recon.sh</span>
+                <button class="visitor-scan-close" aria-label="Close scan">[ x ]</button>
+            </div>
+            <div class="visitor-scan-body" id="visitorScanBody"></div>
+        </div>
+    </div>
+
+    <!-- Security News Feed -->
+    <div id="threatFeed" class="threat-feed" aria-label="Security news feed">
+        <div class="threat-feed-header">
+            <span class="threat-feed-dot"></span>
+            <span class="threat-feed-title">SEC NEWS</span>
+            <span class="threat-feed-source">The Hacker News</span>
+            <button class="threat-feed-refresh" id="threatFeedRefresh" aria-label="Refresh">↺</button>
+            <button class="threat-feed-toggle" id="threatFeedToggle" aria-label="Minimize">_</button>
+        </div>
+        <div class="threat-feed-body" id="threatFeedBody"></div>
+    </div>
+
     <!-- Next Event Banner -->
     {% assign now = 'now' | date: '%s' %}
     {% assign sorted_events = site.data.calendar.events | sort: 'date_start' %}

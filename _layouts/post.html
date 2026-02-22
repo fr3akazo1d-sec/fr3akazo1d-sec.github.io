@@ -14,7 +14,12 @@ layout: default
         <div class="post-meta">
             <span class="post-date">[{{ page.date | date: "%Y-%m-%d" }}]</span>
             <span class="post-tag">#{{ page.tags | first | default: "general" }}</span>
-            <span class="post-reading-time">{{ page.reading_time | default: "5 min read" }}</span>
+            {% if page.reading_time %}
+            <span class="post-reading-time">{{ page.reading_time }}</span>
+            {% else %}
+            {% assign wc = content | number_of_words %}{% assign rt = wc | divided_by: 200 | plus: 1 %}
+            <span class="post-reading-time">{{ rt }} min read</span>
+            {% endif %}
         </div>
         <div class="post-author">
             <span>by <strong>{{ page.author | default: "fr3akazo1d" }}</strong></span>
@@ -22,8 +27,19 @@ layout: default
     </header>
 
     <!-- Post Content -->
-    <div class="post-content">
-        {{ content }}
+    <div class="post-layout">
+        <aside class="toc-sidebar" id="tocSidebar" data-slug="{{ page.slug }}.md" aria-label="Table of contents">
+            <div class="toc-header" id="tocHeader">
+                <div class="toc-prompt-wrap">
+                    <span class="toc-prompt"><span class="toc-p-user">root</span><span class="toc-p-at">@</span><span class="toc-p-host">fr3akazo1d</span><span class="toc-p-suffix">:~#</span> <span class="toc-p-cmd">ls -la</span> <span class="toc-p-file" id="tocFilename"></span></span>
+                </div>
+                <button class="toc-collapse" id="tocCollapse" aria-label="Collapse">−</button>
+            </div>
+            <nav class="toc-nav" id="tocNav" aria-label="Post sections"></nav>
+        </aside>
+        <div class="post-content" id="postContent">
+            {{ content }}
+        </div>
     </div>
 
     <!-- Post Footer -->

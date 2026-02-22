@@ -6,6 +6,11 @@
     <meta name="description" content="{{ page.description | default: site.description }}">
     <meta name="author" content="{{ page.author | default: site.author.name }}">
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.googleusercontent.com https://www.blogger.com; connect-src 'self' https://api.rss2json.com https://ipapi.co https://api.github.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

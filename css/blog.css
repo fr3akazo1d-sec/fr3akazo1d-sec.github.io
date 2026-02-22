@@ -493,3 +493,189 @@ body, body * {
     opacity: 1 !important;
 }
 
+/* ==========================================
+   TABLE OF CONTENTS SIDEBAR
+   ========================================== */
+.post-layout {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.post-layout .post-content {
+    min-width: 0;
+}
+
+.toc-sidebar {
+    position: sticky;
+    top: 70px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    background: rgba(10, 14, 20, 0.7);
+    border: 1px solid rgba(0, 255, 247, 0.15);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 255, 247, 0.15) transparent;
+}
+
+/* --- TOC prompt header --- */
+.toc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.4rem;
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid rgba(0, 255, 247, 0.12);
+    background: rgba(0, 255, 247, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toc-header:hover { background: rgba(0, 255, 247, 0.09); }
+
+.toc-prompt-wrap {
+    flex: 1;
+    min-width: 0;
+}
+
+.toc-prompt {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    white-space: normal;
+    word-break: break-all;
+    line-height: 1.5;
+    display: block;
+}
+
+.toc-p-user   { color: var(--accent-cyan); }
+.toc-p-at     { color: rgba(192,192,192,0.4); }
+.toc-p-host   { color: var(--accent-red); }
+.toc-p-suffix { color: rgba(192,192,192,0.4); }
+.toc-p-cmd    { color: rgba(192,192,192,0.7); }
+.toc-p-file   { color: var(--accent-cyan); opacity: 0.9; }
+
+.toc-collapse {
+    background: none;
+    border: none;
+    color: rgba(192, 192, 192, 0.5);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0 0.2rem;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.toc-collapse:hover { color: var(--accent-cyan); }
+
+/* --- collapsible nav panel --- */
+.toc-nav {
+    display: block;
+    max-height: 2000px;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.toc-sidebar.collapsed .toc-nav {
+    max-height: 0;
+}
+
+/* --- ls -la total line --- */
+.ls-total {
+    padding: 0.3rem 0.6rem 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: rgba(192,192,192,0.3);
+    user-select: none;
+}
+
+/* --- row structure --- */
+.toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.15rem 0 0.4rem;
+}
+
+.toc-item {
+    display: block;
+    padding: 0.08rem 0.5rem;
+    line-height: 1.5;
+    border-left: 2px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.toc-item.active {
+    border-left-color: var(--accent-cyan);
+    background: rgba(0,255,247,0.04);
+}
+
+.toc-item--h3 {
+    padding-left: 1rem;
+}
+
+/* --- permissions + owner --- */
+.ls-meta {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.ls-perm  { color: rgba(192,192,192,0.22); }
+.ls-owner { color: rgba(0,255,247,0.3); }
+
+/* --- the clickable name --- */
+.toc-link {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-decoration: none;
+    transition: color 0.15s, text-shadow 0.15s;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* h2 = directory → cyan */
+.toc-item--h2 .toc-link {
+    color: var(--accent-cyan);
+}
+
+/* h3 = file → muted */
+.toc-item--h3 .toc-link {
+    color: rgba(192,192,192,0.5);
+    font-size: 0.64rem;
+}
+
+/* hover */
+.toc-item:hover .toc-link {
+    color: #ffffff;
+}
+
+/* active / current section */
+.toc-item.active .toc-link,
+.toc-link.active {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(0,255,247,0.55);
+}
+
+/* Collapse to top bar on mobile */
+@media (max-width: 1000px) {
+    .post-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .toc-sidebar {
+        position: static;
+        max-height: none;
+        margin-bottom: 1.5rem;
+    }
+
+    .toc-list {
+        max-height: 220px;
+        overflow-y: auto;
+    }
+}
