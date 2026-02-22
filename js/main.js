@@ -5,6 +5,29 @@
 
 // === INITIALIZE CURSOR IMMEDIATELY ===
 (function initCursor() {
+    // Disable custom cursor on any touch/mobile device
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
+        // Restore native cursor and hide custom cursor elements
+        document.documentElement.style.setProperty('cursor', 'auto', 'important');
+        const style = document.createElement('style');
+        style.textContent = 'body, body * { cursor: auto !important; } .cursor, .cursor-follower { display: none !important; }';
+        document.head.appendChild(style);
+        // Also hide elements once DOM is ready
+        function hideCursorEls() {
+            const cursor = document.querySelector('.cursor');
+            const follower = document.querySelector('.cursor-follower');
+            if (cursor) cursor.style.display = 'none';
+            if (follower) follower.style.display = 'none';
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideCursorEls);
+        } else {
+            hideCursorEls();
+        }
+        return;
+    }
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let cursorX = mouseX;

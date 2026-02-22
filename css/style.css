@@ -84,10 +84,13 @@ body, body * {
 }
 
 /* Hide custom cursor on touch devices */
-@media (hover: none) and (pointer: coarse) {
+@media (hover: none), (pointer: coarse) {
     .cursor,
     .cursor-follower {
         display: none !important;
+    }
+    body, body * {
+        cursor: auto !important;
     }
 }
 
@@ -1935,11 +1938,11 @@ header::before {
     /* Disable custom cursor on mobile */
     .cursor,
     .cursor-follower {
-        display: none;
+        display: none !important;
     }
     
-    body {
-        cursor: auto;
+    body, body * {
+        cursor: auto !important;
     }
 }
 
