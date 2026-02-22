@@ -493,6 +493,18 @@ body, body * {
     opacity: 1 !important;
 }
 
+/* === HIDE CUSTOM CURSOR ON TOUCH/MOBILE DEVICES === */
+@media (hover: none), (pointer: coarse) {
+    body, body * {
+        cursor: auto !important;
+    }
+    .cursor,
+    .cursor-follower {
+        display: none !important;
+        visibility: hidden !important;
+    }
+}
+
 /* ==========================================
    TABLE OF CONTENTS SIDEBAR
    ========================================== */
