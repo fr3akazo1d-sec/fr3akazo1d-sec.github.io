@@ -2,19 +2,23 @@
 # Edit this file to update your about section
 
 description: |
-  Hey, I'm Phil — or Fr3akazo1d if you're in the right circles.
-  I spend my days breaking into systems to figure out how to defend them better. Red Team operations, infrastructure design, custom tooling — that's my thing. Coffee and Monster Energy keep me going, and there's always a HackTheBox lab running somewhere in the background.
-  When I'm not breaking things professionally, I'm probably breaking them at home. My Proxmox cluster (3 nodes) is constantly getting tweaked, my Wi-Fi setup has seen more changes than I can count, and yes... I've accidentally taken down the home internet more times than my wife would like. It's always DNS. Except when it's not DNS — then it's still DNS.
-  Real life? Married with two kids, a dog, and two cats. Free time is rare, but when I get it, I'm either in the homelab or playing Minecraft with my oldest son. Sometimes both.
-  The only device in my house with perfect uptime? The coffee machine.
+  Hey, I'm Phil — or fr3akazo1d if you're in the right circles.
+
+  I spend my days breaking into enterprise systems to help defend them better. Having worked my way from network engineering and SOC analysis into leading Red Team operations, I like looking at targets from both sides of the alert. Adversary emulation, resilient offensive infrastructure, and custom tooling are where I spend most of my time — fueled by coffee, Monster Energy, and a HackTheBox lab running in the background.
+
+  When I'm not breaking things professionally, I'm probably breaking them at home. My 3-node Proxmox cluster is never "finished," my Wi-Fi setup has seen more redesigns than I can count, and yes — I've accidentally taken down the house internet more times than my wife would like. It's always DNS. Except when it's not DNS — which still turns out to be DNS.
+
+  Offline, I'm married with two kids, a dog, and two cats. Free time is rare, so when I get it, I'm either deep in the homelab or playing Minecraft with my oldest son — sometimes both at once.
+
+  The only system in my house with 99.999% uptime? The coffee machine.
 
 focus_areas:
   - Red Team Operations & Adversary Emulation
-  - Offensive Infrastructure (Proxmox, C2, VPN setups)
-  - Custom Tool Development & Automation
-  - Exploit Development & Reverse Engineering
-  - Continuous Learning (HackTheBox, HTB Academy, HackSmarter)
-  - Homelab Tinkering (usually breaking something)
+  - Offensive Infrastructure Architecture (C2, Redirectors, Proxmox)
+  - Active Directory, Network & Cloud Exploitation
+  - Custom Offensive Tooling & Automation (Python, Go, C#)
+  - Detection Validation & Purple Team Collaboration
+  - Continuous Research & Homelab Engineering (HackTheBox, HTB Academy, HackSmarter)
 
 motto: "Sometimes I feel like giving up, then I remember I have a lot of people to prove wrong."
 motto2: "Root is not a privilege. It's a mindset."
