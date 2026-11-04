@@ -34,30 +34,31 @@ A comprehensive interactive menu system for managing all aspects of your website
 - Consistent formatting across all additions
 - Works in both bash and fish shells
 
+### Calendar Event Quick Flow (Option 3)
+
+The calendar event flow now supports faster and UI-friendly input:
+- Defaults start date to today
+- Auto-fills end date when omitted
+- Supports `type` and `status` used by the calendar UI filters
+- Optional `blog_post` and `gallery` links for event cards
+- Runs `scripts/validate_data.rb` automatically after insert
+
+Recommended values:
+- Type: `conference`, `training`, `workshop`, `meetup`, `ctf`, `other`
+- Status: `planned`, `confirmed`, `attending`, `completed`, `cancelled`
+
 ---
 
-## Individual Scripts (Legacy)
+## Individual Scripts
 
-### 1. Blog Post Creation
-- **Bash version**: `./add_blog_post.sh`
-- **Fish version**: `./add_blog_post.fish`
+### Gallery Import
+- **Bash version**: `./add_gallery.sh`
 
-Creates a new blog post with proper frontmatter and structure.
-
-**Usage:**
-```bash
-./add_blog_post.sh  # or ./add_blog_post.fish
-```
-
-### 2. Resource Addition
-- **Bash version**: `./add_resource.sh`
-- **Fish version**: `./add_resource.fish`
-
-Adds a new resource to the resources page.
+Imports images from a local folder, creates a gallery directory, and appends a correctly formatted entry to `_data/gallery.yml`.
 
 **Usage:**
 ```bash
-./add_resource.sh  # or ./add_resource.fish
+./add_gallery.sh /path/to/photos
 ```
 
 ---

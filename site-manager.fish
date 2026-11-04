@@ -126,17 +126,60 @@ function add_calendar_event
     echo ""
     echo "=== 📅 Add Calendar Event ==="
     echo ""
-    
+
     read -P "Event title: " title
-    read -P "Start date (YYYY-MM-DD): " date_start
-    read -P "End date (YYYY-MM-DD, or press Enter if same day): " date_end
+    if test -z "$title"
+        echo "❌ Title is required."
+        read -P "Press Enter to continue..."
+        return
+    end
+
+    set default_start (date +%Y-%m-%d)
+    read -P "Start date (YYYY-MM-DD) [$default_start]: " date_start
+    if test -z "$date_start"
+        set date_start $default_start
+    end
+
+    if not string match -rq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' -- "$date_start"
+        echo "❌ Invalid start date format. Use YYYY-MM-DD."
+        read -P "Press Enter to continue..."
+        return
+    end
+
+    read -P "End date (YYYY-MM-DD, Enter = same day): " date_end
     if test -z "$date_end"
         set date_end $date_start
     end
+
+    if not string match -rq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' -- "$date_end"
+        echo "❌ Invalid end date format. Use YYYY-MM-DD."
+        read -P "Press Enter to continue..."
+        return
+    end
+
     read -P "Location: " location
-    read -P "Type (conference/training/meetup/other): " type
+    if test -z "$location"
+        echo "❌ Location is required."
+        read -P "Press Enter to continue..."
+        return
+    end
+
+    read -P "Type [conference/training/workshop/meetup/ctf/other] (default: conference): " type
+    if test -z "$type"
+        set type conference
+    end
+    set type (string lower $type)
+
+    read -P "Status [planned/confirmed/attending/completed/cancelled] (default: planned): " status
+    if test -z "$status"
+        set status planned
+    end
+    set status (string lower $status)
+
     read -P "Description: " description
     read -P "URL (optional): " url
+    read -P "Blog post link (optional, e.g. /blog/my-post/): " blog_post
+    read -P "Gallery link (optional, e.g. /gallery/#defcon-34): " gallery
     
     set calendar_file "_data/calendar.yml"
     
@@ -154,22 +197,40 @@ function add_calendar_event
         if string match -q "events:*" $line; and test $found_events -eq 0
             echo "" >> $temp_file
             echo "  - title: \"$title\"" >> $temp_file
+            echo "    type: \"$type\"" >> $temp_file
             echo "    date_start: $date_start" >> $temp_file
             echo "    date_end: $date_end" >> $temp_file
             echo "    location: \"$location\"" >> $temp_file
-            echo "    type: \"$type\"" >> $temp_file
+            echo "    status: \"$status\"" >> $temp_file
             echo "    description: \"$description\"" >> $temp_file
             if test -n "$url"
                 echo "    url: \"$url\"" >> $temp_file
+            end
+            if test -n "$blog_post"
+                echo "    blog_post: \"$blog_post\"" >> $temp_file
+            end
+            if test -n "$gallery"
+                echo "    gallery: \"$gallery\"" >> $temp_file
             end
             set found_events 1
         end
     end < $calendar_file
     
     mv $temp_file $calendar_file
+
+    if type -q ruby; and test -f scripts/validate_data.rb
+        echo ""
+        echo "🔍 Validating data..."
+        if ruby scripts/validate_data.rb >/dev/null 2>/dev/null
+            echo "✅ Data validation passed"
+        else
+            echo "⚠️  Validation reported issues. Please check _data/calendar.yml"
+        end
+    end
     
     echo ""
     echo "✅ Calendar event added to $calendar_file"
+    echo "📍 Preview in UI: /calendar/"
     read -P "Press Enter to continue..."
 end
 
@@ -182,11 +243,11 @@ function add_conference
     read -P "Year: " year
     read -P "Location: " location
     read -P "Date (e.g., August 8-11, 2025): " date
-    read -P "Role (Attendee/Speaker/Volunteer): " role
-    read -P "Description: " description
-    read -P "Website URL: " website
+    read -P "Type (Conference/Meetup/Workshop/Training): " type
+    read -P "Activities (comma-separated): " activities_input
     read -P "Highlights (comma-separated): " highlights_input
     
+    set activities_array (string split "," $activities_input)
     set highlights_array (string split "," $highlights_input)
     set conferences_file "_data/conferences.yml"
     
@@ -207,9 +268,14 @@ function add_conference
             echo "    year: $year" >> $temp_file
             echo "    location: \"$location\"" >> $temp_file
             echo "    date: \"$date\"" >> $temp_file
-            echo "    role: \"$role\"" >> $temp_file
-            echo "    description: \"$description\"" >> $temp_file
-            echo "    website: \"$website\"" >> $temp_file
+            echo "    type: \"$type\"" >> $temp_file
+            echo "    activities:" >> $temp_file
+            for activity in $activities_array
+                set activity (string trim $activity)
+                if test -n "$activity"
+                    echo "      - \"$activity\"" >> $temp_file
+                end
+            end
             echo "    highlights:" >> $temp_file
             for highlight in $highlights_array
                 set highlight (string trim $highlight)
@@ -231,12 +297,12 @@ function add_gallery_album
     echo "=== 📸 Add Gallery Album ==="
     echo ""
     
-    read -P "Album name (e.g., defcon-33): " album_name
-    read -P "Album title (e.g., DEF CON 33): " title
+    read -P "Gallery slug (e.g., defcon-33): " gallery_slug
+    read -P "Gallery name (e.g., DEF CON 33): " title
     read -P "Location: " location
-    read -P "Date (YYYY-MM): " date
+    read -P "Date (YYYY-MM-DD): " date
     read -P "Description: " description
-    read -P "Cover photo filename (in assets/images/gallery/$album_name/): " cover
+    read -P "Cover photo filename (in assets/images/gallery/$gallery_slug/): " cover
     
     set gallery_file "_data/gallery.yml"
     
@@ -247,7 +313,7 @@ function add_gallery_album
     end
     
     # Create album directory
-    set album_dir "assets/images/gallery/$album_name"
+    set album_dir "assets/images/gallery/$gallery_slug"
     mkdir -p "$album_dir"
     
     set temp_file (mktemp)
@@ -255,14 +321,15 @@ function add_gallery_album
     
     while read -l line
         echo $line >> $temp_file
-        if string match -q "albums:*" $line; and test $found_albums -eq 0
+        if string match -q "galleries:*" $line; and test $found_albums -eq 0
             echo "" >> $temp_file
-            echo "  - id: \"$album_name\"" >> $temp_file
-            echo "    title: \"$title\"" >> $temp_file
+            echo "  - name: \"$title\"" >> $temp_file
+            echo "    slug: \"$gallery_slug\"" >> $temp_file
             echo "    date: \"$date\"" >> $temp_file
             echo "    location: \"$location\"" >> $temp_file
             echo "    description: \"$description\"" >> $temp_file
-            echo "    cover: \"$cover\"" >> $temp_file
+            echo "    cover_image: \"/assets/images/gallery/$gallery_slug/$cover\"" >> $temp_file
+            echo "    visible: true" >> $temp_file
             echo "    photos: []" >> $temp_file
             set found_albums 1
         end

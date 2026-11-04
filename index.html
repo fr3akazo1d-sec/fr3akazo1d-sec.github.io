@@ -27,14 +27,23 @@ description: Red Team Operator & Security Researcher specializing in adversary e
                 </div>
             </div>
         </div>
+
+        <div class="hero-intro">
+            <h1 class="hero-title">Red Team Operator <span>&amp; Security Researcher</span></h1>
+            <p class="hero-summary">Focused on adversary emulation, offensive infrastructure, and custom tooling.</p>
+            <div class="hero-actions">
+                <a class="hero-action hero-action-primary" href="#projects">Explore projects</a>
+                <a class="hero-action hero-action-secondary" href="#contact">Get in touch</a>
+            </div>
+        </div>
         
         <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" aria-label="Toggle navigation">
+        <button class="mobile-menu-toggle" aria-label="Open navigation" aria-controls="primary-navigation" aria-expanded="false">
             <span class="mob-toggle-text">[&gt;_]</span>
             <span class="mob-toggle-close" aria-hidden="true">[ x ]</span>
         </button>
 
-        <nav class="nav-menu">
+        <nav id="primary-navigation" class="nav-menu">
             <span class="nav-prompt" aria-hidden="true"><span class="nav-prompt-user">root</span><span class="nav-prompt-at">@</span><span class="nav-prompt-host">fr3akazo1d</span><span class="nav-prompt-suffix">:~#</span></span>
             <ul>
                 <li><a href="#home" class="nav-link">Home</a></li>
@@ -88,38 +97,41 @@ description: Red Team Operator & Security Researcher specializing in adversary e
     </div>
 
     <!-- Security News Feed -->
-    <div id="threatFeed" class="threat-feed" aria-label="Security news feed">
+    <div id="threatFeed" class="threat-feed minimized" role="region" aria-label="Security news">
         <div class="threat-feed-header">
             <span class="threat-feed-dot"></span>
             <span class="threat-feed-title">SEC NEWS</span>
             <span class="threat-feed-source">The Hacker News</span>
-            <button class="threat-feed-refresh" id="threatFeedRefresh" aria-label="Refresh">↺</button>
-            <button class="threat-feed-toggle" id="threatFeedToggle" aria-label="Minimize">_</button>
+            <button class="threat-feed-refresh" id="threatFeedRefresh" aria-label="Refresh security news">↺</button>
+            <button class="threat-feed-toggle" id="threatFeedToggle" aria-label="Expand security news" aria-controls="threatFeedBody" aria-expanded="false">+</button>
         </div>
-        <div class="threat-feed-body" id="threatFeedBody"></div>
+        <div class="threat-feed-body" id="threatFeedBody" aria-live="polite" aria-hidden="true" inert></div>
     </div>
 
     <!-- Next Event Banner -->
-    {% assign now = 'now' | date: '%s' %}
+    {% assign now = 'now' | date: '%Y-%m-%d' %}
     {% assign sorted_events = site.data.calendar.events | sort: 'date_start' %}
     {% assign next_event = nil %}
     {% assign is_happening_now = false %}
     {% for event in sorted_events %}
-        {% assign event_start = event.date_start | date: '%s' %}
-        {% assign event_end = event.date_end | date: '%s' %}
-        {% if event_start <= now and event_end >= now %}
-            {% assign next_event = event %}
-            {% assign is_happening_now = true %}
-            {% break %}
-        {% elsif event_start >= now %}
-            {% assign next_event = event %}
-            {% break %}
-        {% endif %}
+        {% assign event_status = event.status | downcase %}
+        {% unless event_status == 'completed' or event_status == 'cancelled' %}
+            {% assign event_start = event.date_start | date: '%Y-%m-%d' %}
+            {% assign event_end = event.date_end | default: event.date_start | date: '%Y-%m-%d' %}
+            {% if event_start <= now and event_end >= now %}
+                {% assign next_event = event %}
+                {% assign is_happening_now = true %}
+                {% break %}
+            {% elsif event_start >= now %}
+                {% assign next_event = event %}
+                {% break %}
+            {% endif %}
+        {% endunless %}
     {% endfor %}
     
     {% if next_event %}
-    <div class="next-event-banner{% if is_happening_now %} event-happening-now{% endif %}">
-        <button class="next-event-close" aria-label="Close banner" onclick="document.querySelector('.next-event-banner').style.display='none';sessionStorage.setItem('nextEventBannerClosed','true');event.stopPropagation();">
+    <div class="next-event-banner{% if is_happening_now %} event-happening-now{% endif %}" data-event-end="{{ next_event.date_end | default: next_event.date_start | date: '%Y-%m-%d' }}" data-event-timezone="{{ site.timezone | default: 'UTC' }}">
+        <button class="next-event-close" aria-label="Close banner">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
@@ -299,7 +311,7 @@ description: Red Team Operator & Security Researcher specializing in adversary e
                     </div>
                     
                     <div class="timeline-content">
-                        <div class="timeline-header" {% unless experience.current %}onclick="this.parentElement.classList.toggle('expanded')"{% endunless %}>
+                        <div class="timeline-header"{% unless experience.current %} data-expandable="true"{% endunless %}>
                             <div class="timeline-date">
                                 {% assign start_year = experience.start_date | slice: 0, 4 %}
                                 {% assign start_month = experience.start_date | slice: 5, 2 %}
@@ -538,11 +550,17 @@ description: Red Team Operator & Security Researcher specializing in adversary e
                         <span class="tag">{{ tag }}</span>
                         {% endfor %}
                     </div>
-                    <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="project-link">View on GitHub →</a>
+                    <div class="project-links">
+                        <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="project-link">Source code</a>
+                        {% if project.live_url %}
+                        <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer" class="project-link">Live site</a>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endif %}
                 {% endfor %}
             </div>
+            <a class="projects-more" href="https://github.com/{{ site.author.github }}?tab=repositories" target="_blank" rel="noopener noreferrer">Browse all public repositories</a>
         </div>
     </section>
 

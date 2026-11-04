@@ -55,7 +55,7 @@ events:
     date_end: 2026-08-09
     location: "Las Vegas, Nevada, USA"
     url: "https://defcon.org"
-    status: "planned"  # planned, confirmed, attending, completed
+    status: "completed"  # planned, confirmed, attending, completed
     description: "World's largest hacking conference"
     
   

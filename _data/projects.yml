@@ -1,13 +1,15 @@
 # Projects Configuration
 # Add or edit projects here. They will automatically appear on your homepage.
 
-- name: Jykell Theme
-  description: Custom Jekyll theme based on my colors and style of my F! logo
+- name: Personal Website
+  description: Jekyll-powered portfolio with a terminal-inspired theme, technical blog, conference archive, gallery, and resources.
   tags:
-    - Jykyll 
-    - Homepage
-    - personal
+    - Jekyll
+    - Liquid
+    - JavaScript
+    - Portfolio
   github_url: https://github.com/fr3akazo1d-sec/fr3akazo1d-sec.github.io
+  live_url: https://cyber.malle.red
   icon: code
   visible: true
   

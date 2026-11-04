@@ -99,6 +99,54 @@ personal-website/
    http://localhost:4000
    ```
 
+## 🧪 Local Testing (Desktop + Client Device)
+
+### 1. Validate data before running
+
+```bash
+ruby scripts/validate_data.rb
+```
+
+### 2. Start local server (local machine only)
+
+```bash
+bundle exec jekyll serve --livereload
+```
+
+### 3. Start server for testing from your client device (same network)
+
+```bash
+bundle exec jekyll serve --host 0.0.0.0 --port 4000 --livereload
+```
+
+Or use the helper:
+
+```bash
+./scripts/run_local.sh 0.0.0.0 4000
+```
+
+Then open from your client device using your Mac IP:
+
+```bash
+ipconfig getifaddr en0
+```
+
+URL example on the client:
+
+```
+http://<your-mac-ip>:4000
+```
+
+### 4. If Bundler version is missing
+
+If you see an error about Bundler version mismatch, install the required version from `Gemfile.lock`:
+
+```bash
+gem install bundler:2.7.2
+bundle _2.7.2_ install
+bundle _2.7.2_ exec jekyll serve --host 0.0.0.0 --port 4000 --livereload
+```
+
 ## 📝 Configuration
 
 ### Site Settings
@@ -179,6 +227,15 @@ events:
     status: "confirmed"  # planned, confirmed, attending, completed
     description: "Event description"
 ```
+
+  Faster method (recommended):
+
+  ```bash
+  ./site-manager.sh
+  # choose option 3: Add Calendar Event
+  ```
+
+  The workflow includes defaults, status/type support, optional blog/gallery links, and automatic data validation.
 
 #### Conferences
 

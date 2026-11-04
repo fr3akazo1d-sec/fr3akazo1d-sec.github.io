@@ -143,17 +143,54 @@ add_calendar_event() {
     echo ""
     echo "=== 📅 Add Calendar Event ==="
     echo ""
-    
+
     read -p "Event title: " title
-    read -p "Start date (YYYY-MM-DD): " date_start
-    read -p "End date (YYYY-MM-DD, or press Enter if same day): " date_end
+    if [ -z "$title" ]; then
+        echo "❌ Title is required."
+        read -p "Press Enter to continue..."
+        return
+    fi
+
+    default_start=$(date +%Y-%m-%d)
+    read -p "Start date (YYYY-MM-DD) [${default_start}]: " date_start
+    if [ -z "$date_start" ]; then
+        date_start="$default_start"
+    fi
+
+    if [[ ! "$date_start" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+        echo "❌ Invalid start date format. Use YYYY-MM-DD."
+        read -p "Press Enter to continue..."
+        return
+    fi
+
+    read -p "End date (YYYY-MM-DD, Enter = same day): " date_end
     if [ -z "$date_end" ]; then
         date_end="$date_start"
     fi
+
+    if [[ ! "$date_end" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+        echo "❌ Invalid end date format. Use YYYY-MM-DD."
+        read -p "Press Enter to continue..."
+        return
+    fi
+
     read -p "Location: " location
-    read -p "Type (conference/training/meetup/other): " type
+    if [ -z "$location" ]; then
+        echo "❌ Location is required."
+        read -p "Press Enter to continue..."
+        return
+    fi
+
+    read -p "Type [conference/training/workshop/meetup/ctf/other] (default: conference): " type
+    type=$(echo "${type:-conference}" | tr '[:upper:]' '[:lower:]')
+
+    read -p "Status [planned/confirmed/attending/completed/cancelled] (default: planned): " status
+    status=$(echo "${status:-planned}" | tr '[:upper:]' '[:lower:]')
+
     read -p "Description: " description
     read -p "URL (optional): " url
+    read -p "Blog post link (optional, e.g. /blog/my-post/): " blog_post
+    read -p "Gallery link (optional, e.g. /gallery/#defcon-34): " gallery
     
     calendar_file="_data/calendar.yml"
     
@@ -166,15 +203,26 @@ add_calendar_event() {
     # Create the new entry
     temp_entry="
   - title: \"${title}\"
-    date_start: \"${date_start}\"
-    date_end: \"${date_end}\"
-    location: \"${location}\"
     type: \"${type}\"
+    date_start: ${date_start}
+    date_end: ${date_end}
+    location: \"${location}\"
+    status: \"${status}\"
     description: \"${description}\""
     
     if [ -n "$url" ]; then
         temp_entry="${temp_entry}
     url: \"${url}\""
+    fi
+
+    if [ -n "$blog_post" ]; then
+        temp_entry="${temp_entry}
+    blog_post: \"${blog_post}\""
+    fi
+
+    if [ -n "$gallery" ]; then
+        temp_entry="${temp_entry}
+    gallery: \"${gallery}\""
     fi
     
     # Insert after "events:" line
@@ -182,9 +230,20 @@ add_calendar_event() {
     /^events:/ { print; print entry; next }
     { print }
     ' "$calendar_file" > "${calendar_file}.tmp" && mv "${calendar_file}.tmp" "$calendar_file"
+
+    if command -v ruby >/dev/null 2>&1 && [ -f "scripts/validate_data.rb" ]; then
+        echo ""
+        echo "🔍 Validating data..."
+        if ruby scripts/validate_data.rb >/dev/null 2>&1; then
+            echo "✅ Data validation passed"
+        else
+            echo "⚠️  Validation reported issues. Please check _data/calendar.yml"
+        fi
+    fi
     
     echo ""
     echo "✅ Calendar event added to $calendar_file"
+    echo "📍 Preview in UI: /calendar/"
     read -p "Press Enter to continue..."
 }
 
@@ -197,11 +256,11 @@ add_conference() {
     read -p "Year: " year
     read -p "Location: " location
     read -p "Date (e.g., August 8-11, 2025): " date
-    read -p "Role (Attendee/Speaker/Volunteer): " role
-    read -p "Description: " description
-    read -p "Website URL: " website
+    read -p "Type (Conference/Meetup/Workshop/Training): " type
+    read -p "Activities (comma-separated): " activities_input
     read -p "Highlights (comma-separated): " highlights_input
     
+    IFS=',' read -ra activities_array <<< "$activities_input"
     IFS=',' read -ra highlights_array <<< "$highlights_input"
     conferences_file="_data/conferences.yml"
     
@@ -217,9 +276,17 @@ add_conference() {
     year: ${year}
     location: \"${location}\"
     date: \"${date}\"
-    role: \"${role}\"
-    description: \"${description}\"
-    website: \"${website}\"
+        type: \"${type}\"
+        activities:"
+
+        for activity in "${activities_array[@]}"; do
+                activity=$(echo "$activity" | xargs)
+                [ -z "$activity" ] && continue
+                temp_entry="${temp_entry}
+            - \"${activity}\""
+        done
+
+        temp_entry="${temp_entry}
     highlights:"
     
     for highlight in "${highlights_array[@]}"; do
@@ -244,12 +311,12 @@ add_gallery_album() {
     echo "=== 📸 Add Gallery Album ==="
     echo ""
     
-    read -p "Album name (e.g., defcon-33): " album_name
-    read -p "Album title (e.g., DEF CON 33): " title
+    read -p "Gallery slug (e.g., defcon-33): " gallery_slug
+    read -p "Gallery name (e.g., DEF CON 33): " gallery_name
     read -p "Location: " location
-    read -p "Date (YYYY-MM): " date
+    read -p "Date (YYYY-MM-DD): " date
     read -p "Description: " description
-    read -p "Cover photo filename (in assets/images/gallery/$album_name/): " cover
+    read -p "Cover photo filename (in assets/images/gallery/$gallery_slug/): " cover
     
     gallery_file="_data/gallery.yml"
     
@@ -260,22 +327,23 @@ add_gallery_album() {
     fi
     
     # Create album directory
-    album_dir="assets/images/gallery/${album_name}"
+        album_dir="assets/images/gallery/${gallery_slug}"
     mkdir -p "$album_dir"
     
     # Create the new entry
     temp_entry="
-  - id: \"${album_name}\"
-    title: \"${title}\"
+    - name: \"${gallery_name}\"
+        slug: \"${gallery_slug}\"
     date: \"${date}\"
     location: \"${location}\"
     description: \"${description}\"
-    cover: \"${cover}\"
+        cover_image: \"/assets/images/gallery/${gallery_slug}/${cover}\"
+        visible: true
     photos: []"
     
-    # Insert after "albums:" line
+        # Insert after "galleries:" line
     awk -v entry="$temp_entry" '
-    /^albums:/ { print; print entry; next }
+        /^galleries:/ { print; print entry; next }
     { print }
     ' "$gallery_file" > "${gallery_file}.tmp" && mv "${gallery_file}.tmp" "$gallery_file"
     
@@ -420,10 +488,11 @@ preview_site() {
     echo ""
     
     if [ "$server_mode" = "2" ]; then
+        NETWORK_IP=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo "<network-ip>")
         echo "Starting server on 0.0.0.0:4000 (accessible from network)"
         echo "You can access it from:"
         echo "  - Local: http://localhost:4000"
-        echo "  - Network: http://$(hostname -I | awk '{print $1}'):4000"
+        echo "  - Network: http://${NETWORK_IP}:4000"
         echo ""
         bundle exec jekyll serve --host 0.0.0.0 --livereload
     else

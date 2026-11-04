@@ -7,7 +7,7 @@ description: Upcoming conferences, trainings, and security events I'm attending
 
 {% include nav.html %}
 
-<section id="calendar" class="section" style="margin-top: 60px;">
+<section id="calendar" class="section calendar-page" style="margin-top: 60px;">
     <div class="container">
         <h1 class="section-title glitch" data-text="$ cal 2025-2026"># cat calendar.ical</h1>
         <p class="section-description">Upcoming conferences, trainings, and security events</p>
@@ -23,6 +23,45 @@ description: Upcoming conferences, trainings, and security events I'm attending
                 </svg>
                 Upcoming Events
             </h2>
+
+            <div class="calendar-controls" aria-label="Filter calendar events">
+                <label class="calendar-control">
+                    <span class="calendar-control-label">Search</span>
+                    <input id="calendarSearchInput" class="calendar-control-input" type="search" placeholder="Search title, location, description" autocomplete="off">
+                </label>
+
+                <label class="calendar-control">
+                    <span class="calendar-control-label">Type</span>
+                    <select id="calendarTypeFilter" class="calendar-control-input">
+                        <option value="all">All types</option>
+                        <option value="conference">Conference</option>
+                        <option value="training">Training</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="meetup">Meetup</option>
+                        <option value="ctf">CTF</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+
+                <label class="calendar-control">
+                    <span class="calendar-control-label">Status</span>
+                    <select id="calendarStatusFilter" class="calendar-control-input">
+                        <option value="all">All statuses</option>
+                        <option value="planned">Planned</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="attending">Attending</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </label>
+
+                <label class="calendar-control calendar-control-toggle" for="calendarShowPast">
+                    <input id="calendarShowPast" type="checkbox" checked>
+                    <span>Show past events</span>
+                </label>
+            </div>
+
+            <p id="calendarResults" class="calendar-results" aria-live="polite"></p>
         </div>
 
         <!-- Events Timeline -->
@@ -39,7 +78,7 @@ description: Upcoming conferences, trainings, and security events I'm attending
                 {% endif %}
                 
                 {% if is_upcoming %}
-                <div class="calendar-event" data-status="{{ event.status }}" data-type="{{ event.type }}">
+                <div class="calendar-event" data-status="{{ event.status | downcase }}" data-type="{{ event.type | downcase }}" data-search="{{ event.title | downcase | escape }} {{ event.location | downcase | escape }} {{ event.description | default: '' | downcase | escape }}">
                     <div class="event-date">
                         <div class="event-month">{{ event.date_start | date: "%b" }}</div>
                         <div class="event-day">{{ event.date_start | date: "%d" }}</div>
@@ -121,9 +160,10 @@ description: Upcoming conferences, trainings, and security events I'm attending
                 {% endif %}
             {% endfor %}
         </div>
+        <p id="calendarUpcomingEmpty" class="calendar-empty" hidden>No upcoming events match your filter.</p>
 
         <!-- Past Events Summary -->
-        <div class="calendar-past">
+        <div class="calendar-past" id="calendarPastSection">
             <h2 class="calendar-subtitle">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px; display: inline-block; vertical-align: middle;">
                     <polyline points="1 4 1 10 7 10"/>
@@ -132,11 +172,11 @@ description: Upcoming conferences, trainings, and security events I'm attending
                 Past Events
             </h2>
             
-            <div class="calendar-past-list">
+            <div class="calendar-past-list" id="calendarPastList">
                 {% for event in sorted_events %}
                     {% assign event_end_date = event.date_end | date: '%s' %}
                     {% if event_end_date < now %}
-                    <div class="past-event-item">
+                    <div class="past-event-item" data-status="{{ event.status | downcase }}" data-type="{{ event.type | downcase }}" data-search="{{ event.title | downcase | escape }} {{ event.location | downcase | escape }} {{ event.description | default: '' | downcase | escape }}">
                         <div class="past-event-info">
                             <span class="past-event-date">{{ event.date_start | date: "%b %Y" }}</span>
                             <span class="past-event-title">{{ event.title }}</span>
@@ -169,6 +209,7 @@ description: Upcoming conferences, trainings, and security events I'm attending
                     {% endif %}
                 {% endfor %}
             </div>
+            <p id="calendarPastEmpty" class="calendar-empty" hidden>No past events match your filter.</p>
         </div>
 
         <!-- Quick Stats -->

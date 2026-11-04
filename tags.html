@@ -64,42 +64,6 @@ permalink: /tags/
     </div>
 </section>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const filterButtons = document.querySelectorAll('.tag-filter-btn');
-    const tagGroups = document.querySelectorAll('.tag-group');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const selectedTag = button.dataset.tag;
-            
-            // Update active state
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            
-            // Filter tag groups
-            tagGroups.forEach(group => {
-                if (selectedTag === 'all') {
-                    group.style.display = 'block';
-                } else if (group.dataset.tagGroup === selectedTag) {
-                    group.style.display = 'block';
-                } else {
-                    group.style.display = 'none';
-                }
-            });
-            
-            // Scroll to tags container
-            document.querySelector('.tags-container').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-        });
-    });
-});
-</script>
-    </div>
-</section>
-
 <style>
 /* === TAGS PAGE STYLES === */
 .tags-page {
