@@ -9,31 +9,67 @@ description: Red Team Operator & Security Researcher specializing in adversary e
         <!-- Matrix Rain Background -->
         <canvas id="matrixRain" class="matrix-rain-canvas" aria-hidden="true"></canvas>
 
-        <div class="header-container">
-            <div class="logo-container">
-                <div class="logo glitch" data-text="F!">
-                    <span class="logo-f">F</span><span class="logo-exclaim">!</span>
+        <div class="header-container hero-shell">
+            <div class="hero-main">
+                <div class="hero-kicker">
+                    <span class="hero-kicker-dot" aria-hidden="true"></span>
+                    <span>OFFENSIVE SECURITY // RED TEAM OPERATIONS</span>
                 </div>
-                <div class="motto">{{ site.motto }}</div>
-            </div>
-            <div class="avatar-container">
-                <div class="avatar-scene">
-                    <!-- Replace 'avatar.png' with your actual avatar filename -->
-                    <img src="{{ site.baseurl }}/assets/images/avatar.png" alt="fr3akazo1d avatar" class="avatar-image">
-                    <div class="avatar-border"></div>
-                </div>
-                <div class="terminal-line">
-                    <span class="username glitch" data-text="fr3akazo1d">fr3akazo1d</span><span class="prompt-text glitch" data-text="@root:~#">@root:~#</span><span class="hero-cmd" id="heroCmd" aria-hidden="true"></span><span class="hero-cursor" id="heroCursor" aria-hidden="true">_</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="hero-intro">
-            <h1 class="hero-title">Red Team Operator <span>&amp; Security Researcher</span></h1>
-            <p class="hero-summary">Focused on adversary emulation, offensive infrastructure, and custom tooling.</p>
-            <div class="hero-actions">
-                <a class="hero-action hero-action-primary" href="#projects">Explore projects</a>
-                <a class="hero-action hero-action-secondary" href="#contact">Get in touch</a>
+                <div class="hero-intro">
+                    <h1 class="hero-title">Red Team Operator <span>&amp; Security Researcher</span></h1>
+                    <p class="hero-summary">Focused on adversary emulation, offensive infrastructure, and custom tooling.</p>
+                </div>
+
+                <div class="terminal-line" aria-label="Terminal prompt">
+                    <span class="username glitch" data-text="fr3akazo1d">fr3akazo1d</span><span class="prompt-text" data-text="@root:~#">@root:~#</span><span class="hero-cmd" id="heroCmd" aria-hidden="true"></span><span class="hero-cursor" id="heroCursor" aria-hidden="true">_</span>
+                </div>
+
+                <div class="motto">{{ site.motto }}</div>
+
+                <div class="hero-actions">
+                    <a class="hero-action hero-action-primary" href="#projects">Explore projects</a>
+                    <a class="hero-action hero-action-secondary" href="#blog">Read blog</a>
+                    <a class="hero-action hero-action-secondary" href="#contact">Get in touch</a>
+                    <button type="button" class="hero-action hero-action-ghost" id="reconTrigger">./recon.sh</button>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="operator-card">
+                    <div class="operator-card-header">
+                        <span class="operator-card-id">ID // FR3AKAZO1D</span>
+                        <div class="logo-container">
+                            <div class="logo glitch" data-text="F!">
+                                <span class="logo-f">F</span><span class="logo-exclaim">!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="avatar-container">
+                        <div class="avatar-scene">
+                            <img src="{{ site.baseurl }}/assets/images/avatar.png" alt="fr3akazo1d avatar" class="avatar-image">
+                            <div class="avatar-border"></div>
+                        </div>
+                    </div>
+                    <div class="operator-telemetry" aria-hidden="true">
+                        <div class="telemetry-item">
+                            <span class="telemetry-key">UID</span>
+                            <span class="telemetry-val">0 (root)</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-key">ROLE</span>
+                            <span class="telemetry-val">Red Team</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-key">STATE</span>
+                            <span class="telemetry-val telemetry-online">ONLINE</span>
+                        </div>
+                        <div class="telemetry-item telemetry-item-wide">
+                            <span class="telemetry-key">FOCUS</span>
+                            <span class="telemetry-val">Adversary Emulation &amp; Offensive Security</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         

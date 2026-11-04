@@ -5,27 +5,28 @@
 
 /* === BLOG POST CONTAINER === */
 .blog-post {
-    max-width: 1200px;
-    margin: 100px auto 50px;
-    padding: 2.25rem;
-    background: var(--bg-secondary);
-    border: 1px solid rgba(0, 255, 247, 0.2);
-    border-radius: 12px;
-    animation: fadeIn 1s ease;
+    max-width: 1160px;
+    margin: 92px auto 50px;
+    padding: 2.5rem;
+    background: linear-gradient(180deg, rgba(16, 24, 38, 0.92) 0%, rgba(11, 17, 27, 0.96) 100%);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    animation: fadeIn 0.6s ease;
 }
 
 /* === POST HEADER === */
 .post-header {
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     text-align: center;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid rgba(0, 255, 247, 0.2);
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.16);
 }
 
 .post-title {
-    font-size: 3rem;
-    color: var(--accent-cyan);
-    margin-bottom: 1.5rem;
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    color: var(--text-bright);
+    margin-bottom: 1.25rem;
     line-height: 1.2;
 }
 

@@ -99,10 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageIndex++;
                 loadingStatus.textContent = loadingMessages[messageIndex];
             }
-        }, 250);
+        }, 160);
         
-        // Show loading screen for at least 2 seconds
-        const minLoadTime = 2000;
+        // Keep first-visit boot screen snappy
+        const minLoadTime = 850;
         const startTime = Date.now();
         
         window.addEventListener('load', () => {
@@ -119,9 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelectorAll('.section').forEach((section, index) => {
                         setTimeout(() => {
                             section.classList.add('fade-in');
-                        }, index * 100);
+                        }, index * 80);
                     });
-                }, 800);
+                }, 320);
             }, remainingTime);
         });
     }
@@ -295,25 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollProgressBar.style.width = pct + '%';
         }, { passive: true });
     }
-
-    // Cursor hover effects
-    if (cursor && cursorFollower) {
-        const hoverElements = document.querySelectorAll('a, button, .blog-card, .project-card, .contact-card, .platform-card, .skill-category, .timeline-item, .cert-item');
-        
-        hoverElements.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursor.style.borderColor = '#ff003c';
-                cursorFollower.style.transform = 'translate(-50%, -50%) scale(2)';
-            });
-            
-            element.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursor.style.borderColor = '#00fff7';
-                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-        });
-    }
     
     // === SMOOTH SCROLL (already handled in mobile menu) ===
     // Additional smooth scroll functionality
@@ -336,7 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // For regular links (like /tags/), let the browser handle navigation normally
         });
-    });    // === ACTIVE NAV LINK ===
+    });
+
+    // === ACTIVE NAV LINK ===
     const sections = document.querySelectorAll('.section, header');
     
     function updateActiveNav() {
@@ -358,35 +341,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    window.addEventListener('scroll', updateActiveNav);
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
     updateActiveNav();
-    
-    // === GLITCH EFFECT TRIGGER ===
-    const glitchElements = document.querySelectorAll('.glitch');
-    
-    function triggerGlitch(element) {
-        element.style.animation = 'none';
-        setTimeout(() => {
-            element.style.animation = '';
-        }, 10);
-    }
-    
-    // Random glitch effect every 5-10 seconds
-    if (!prefersReducedMotion && glitchElements.length > 0) {
-        const glitchIntervalMs = Math.floor(Math.random() * 5000) + 5000;
-        setInterval(() => {
-            if (!pageIsVisible()) return;
-            const randomElement = glitchElements[Math.floor(Math.random() * glitchElements.length)];
-            if (randomElement) {
-                triggerGlitch(randomElement);
-            }
-        }, glitchIntervalMs);
-    }
     
     // === INTERSECTION OBSERVER FOR ANIMATIONS ===
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
     };
     
     const observer = new IntersectionObserver((entries) => {
@@ -408,54 +369,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         section.style.opacity = '0';
-        section.style.transform = 'translateY(50px)';
-        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        section.style.transform = 'translateY(24px)';
+        section.style.transition = 'opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)';
         observer.observe(section);
     });
-    
-    // === TYPING EFFECT REMOVED ===
-    // Text now displays immediately without typing animation
-    
-    // === PARTICLE BACKGROUND (Optional) ===
-    function createParticle() {
-        const particle = document.createElement('div');
-        particle.style.position = 'fixed';
-        particle.style.width = '2px';
-        particle.style.height = '2px';
-        particle.style.background = Math.random() > 0.5 ? '#00fff7' : '#ff003c';
-        particle.style.opacity = Math.random() * 0.5 + 0.2;
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = '-10px';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '0';
-        particle.style.borderRadius = '50%';
-        
-        document.body.appendChild(particle);
-        
-        let posY = -10;
-        const speed = Math.random() * 2 + 1;
-        
-        function animateParticle() {
-            posY += speed;
-            particle.style.top = posY + 'px';
-            
-            if (posY < window.innerHeight) {
-                requestAnimationFrame(animateParticle);
-            } else {
-                particle.remove();
-            }
-        }
-        
-        animateParticle();
-    }
-    
-    // Create particles periodically (reduce frequency to avoid performance issues)
-    if (!prefersReducedMotion) {
-        setInterval(() => {
-            if (!pageIsVisible()) return;
-            createParticle();
-        }, 2400);
-    }
     
     // === LOGO HOVER EFFECT ===
     const logo = document.querySelector('.logo');
@@ -1115,8 +1032,8 @@ window.addEventListener('load', () => {
         }
     }
 
-    // Wait for loading screen to finish before starting
-    setTimeout(type, 2200);
+    // Start typing promptly
+    setTimeout(type, 650);
 })();
 
 // === CLICK RIPPLE HEX COORDS ===
@@ -1186,6 +1103,7 @@ window.addEventListener('load', () => {
     ];
 
     function showToast() {
+        if (!pageIsVisible()) return;
         const fn  = EVENTS[Math.floor(Math.random() * EVENTS.length)];
         const evt = fn(randIP(), randIP());
 
@@ -1196,11 +1114,11 @@ window.addEventListener('load', () => {
         setTimeout(() => toast.remove(), 5200);
     }
 
-    // First toast after 45s, then every 90–150s
+    // First toast after 75s, then every 120–180s
     setTimeout(function loop() {
         showToast();
-        setTimeout(loop, 90000 + Math.random() * 60000);
-    }, 45000);
+        setTimeout(loop, 120000 + Math.random() * 60000);
+    }, 75000);
 })();
 
 // === HUD WIDGET ===
@@ -2153,99 +2071,113 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 70);
 })();
 
-// ---- VISITOR RECON SCAN TERMINAL ----
-(async function initVisitorScan() {
+// ---- VISITOR RECON SCAN TERMINAL (ON-DEMAND) ----
+(function initVisitorScan() {
     const overlay  = document.getElementById('visitorScan');
     if (!overlay) return;
 
-    // Only on homepage, only once per session
-    const isHome = ['/', '/index.html', ''].includes(window.location.pathname);
-    if (!isHome || sessionStorage.getItem('visitorScanShown')) return;
-    sessionStorage.setItem('visitorScanShown', 'true');
-
     const body     = document.getElementById('visitorScanBody');
     const closeBtn = overlay.querySelector('.visitor-scan-close');
+    const trigger  = document.getElementById('reconTrigger');
+    let isRunning  = false;
+    let activeTimers = [];
 
-    // ── Collect real browser fingerprint data ──
-    const ua     = navigator.userAgent;
-    let os = 'Unknown OS';
-    if      (/Windows NT 1[0-9]/.test(ua))    os = 'Windows 10/11';
-    else if (/Windows NT 6/.test(ua))          os = 'Windows 7/8';
-    else if (/Mac OS X/.test(ua))              os = 'macOS';
-    else if (/Android/.test(ua))               os = 'Android';
-    else if (/iPhone|iPad/.test(ua))           os = 'iOS';
-    else if (/Linux/.test(ua))                 os = 'Linux';
-
-    let browser = 'Unknown';
-    if      (/Firefox\//.test(ua))  browser = 'Firefox';
-    else if (/Edg\//.test(ua))      browser = 'Edge';
-    else if (/Chrome\//.test(ua))   browser = 'Chrome';
-    else if (/Safari\//.test(ua))   browser = 'Safari';
-
-    const resolution = `${window.screen.width}x${window.screen.height}`;
-    const lang       = navigator.language || 'Unknown';
-    const tz         = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
-    const cpu        = navigator.hardwareConcurrency || '?';
-
-    // Try to get real IP + country
-    let ip      = '██.██.██.██';
-    let country = '';
-    try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 3000);
-        const resp  = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-        clearTimeout(timer);
-        const data  = await resp.json();
-        if (data.ip)           ip      = data.ip;
-        if (data.country_name) country = ` (${data.country_name})`;
-    } catch (_) { /* silently fail */ }
-
-    const lines = [
-        { text: '[*] Initiating visitor reconnaissance...', delay: 0,    color: 'cyan'  },
-        { text: `[*] Target host   : ${window.location.hostname}`,       delay: 500,  color: 'text'  },
-        { text: '[*] Scanning incoming connection...',                    delay: 950,  color: 'cyan'  },
-        { text: `[+] IP Address    : ${ip}${country}`,                   delay: 1500, color: 'green' },
-        { text: `[+] OS            : ${os}`,                             delay: 1900, color: 'green' },
-        { text: `[+] Browser       : ${browser}`,                        delay: 2200, color: 'green' },
-        { text: `[+] Resolution    : ${resolution}`,                     delay: 2500, color: 'green' },
-        { text: `[+] Language      : ${lang}`,                           delay: 2800, color: 'green' },
-        { text: `[+] Timezone      : ${tz}`,                             delay: 3100, color: 'green' },
-        { text: `[+] CPU Cores     : ${cpu}`,                            delay: 3400, color: 'green' },
-        { text: '',                                                       delay: 3700, color: 'text'  },
-        { text: '[*] Running exploit modules...',                         delay: 3800, color: 'cyan'  },
-        { text: '[!] CVE-2024-1337  ........... PATCHED',                delay: 4200, color: 'red'   },
-        { text: '[!] CVE-2025-0013  ........... PATCHED',                delay: 4500, color: 'red'   },
-        { text: '[*] Attempting privilege escalation...',                 delay: 4900, color: 'cyan'  },
-        { text: '[-] sudo: permission denied.',                          delay: 5350, color: 'red'   },
-        { text: '',                                                       delay: 5600, color: 'text'  },
-        { text: '// Just kidding — welcome to my site, hacker. 😈',      delay: 5750, color: 'cyan'  },
-        { text: '[+] ACCESS GRANTED',                                    delay: 6100, color: 'green' },
-    ];
-
-    function close() {
-        overlay.classList.remove('show');
-        setTimeout(() => { if (overlay.parentNode) overlay.style.display = 'none'; }, 450);
+    function clearTimers() {
+        activeTimers.forEach((id) => clearTimeout(id));
+        activeTimers = [];
     }
 
-    // Show after loading screen has had time to finish
-    setTimeout(() => {
-        overlay.classList.add('show');
+    function close() {
+        clearTimers();
+        isRunning = false;
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+            if (!overlay.classList.contains('show')) {
+                overlay.style.display = 'none';
+            }
+        }, 350);
+    }
+
+    async function runScan() {
+        if (isRunning) return;
+        isRunning = true;
+        clearTimers();
+        body.textContent = '';
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+        requestAnimationFrame(() => overlay.classList.add('show'));
+
+        const ua = navigator.userAgent;
+        let os = 'Unknown OS';
+        if      (/Windows NT 1[0-9]/.test(ua)) os = 'Windows 10/11';
+        else if (/Windows NT 6/.test(ua))       os = 'Windows 7/8';
+        else if (/Mac OS X/.test(ua))           os = 'macOS';
+        else if (/Android/.test(ua))            os = 'Android';
+        else if (/iPhone|iPad/.test(ua))        os = 'iOS';
+        else if (/Linux/.test(ua))              os = 'Linux';
+
+        let browser = 'Unknown';
+        if      (/Firefox\//.test(ua)) browser = 'Firefox';
+        else if (/Edg\//.test(ua))     browser = 'Edge';
+        else if (/Chrome\//.test(ua))  browser = 'Chrome';
+        else if (/Safari\//.test(ua))  browser = 'Safari';
+
+        const resolution = `${window.screen.width}x${window.screen.height}`;
+        const lang       = navigator.language || 'Unknown';
+        const tz         = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+        const cpu        = navigator.hardwareConcurrency || '?';
+
+        let ip      = '██.██.██.██';
+        let country = '';
+        try {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 2500);
+            const resp  = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+            clearTimeout(timer);
+            const data  = await resp.json();
+            if (data.ip)           ip      = data.ip;
+            if (data.country_name) country = ` (${data.country_name})`;
+        } catch (_) {}
+
+        const lines = [
+            { text: '[*] Initiating visitor reconnaissance...',         delay: 0,    color: 'cyan'  },
+            { text: `[*] Target host   : ${window.location.hostname}`,  delay: 350,  color: 'text'  },
+            { text: '[*] Fingerprinting incoming session...',           delay: 700,  color: 'cyan'  },
+            { text: `[+] IP Address    : ${ip}${country}`,              delay: 1100, color: 'green' },
+            { text: `[+] OS            : ${os}`,                        delay: 1400, color: 'green' },
+            { text: `[+] Browser       : ${browser}`,                   delay: 1700, color: 'green' },
+            { text: `[+] Resolution    : ${resolution}`,                delay: 2000, color: 'green' },
+            { text: `[+] Language      : ${lang}`,                      delay: 2300, color: 'green' },
+            { text: `[+] Timezone      : ${tz}`,                        delay: 2600, color: 'green' },
+            { text: `[+] CPU Cores     : ${cpu}`,                       delay: 2900, color: 'green' },
+            { text: '',                                                  delay: 3150, color: 'text'  },
+            { text: '[*] Probing attack surface...',                    delay: 3300, color: 'cyan'  },
+            { text: '[!] CVE-2024-1337  ........... PATCHED',           delay: 3650, color: 'red'   },
+            { text: '[!] CVE-2025-0013  ........... PATCHED',           delay: 3950, color: 'red'   },
+            { text: '[+] ACCESS GRANTED — welcome, operator.',          delay: 4350, color: 'green' },
+        ];
 
         lines.forEach(({ text, delay, color }) => {
-            setTimeout(() => {
+            const t = setTimeout(() => {
                 const line = document.createElement('div');
                 line.className = `scan-line scan-line--${color}`;
                 line.textContent = text;
                 body.appendChild(line);
                 body.scrollTop = body.scrollHeight;
             }, delay);
+            activeTimers.push(t);
         });
 
-        // Auto-close ~1 s after last line
-        setTimeout(close, lines[lines.length - 1].delay + 1200);
-    }, 2800);
+        activeTimers.push(setTimeout(() => { isRunning = false; }, lines[lines.length - 1].delay + 300));
+    }
 
-    closeBtn.addEventListener('click', close);
+    if (trigger) {
+        trigger.addEventListener('click', runScan);
+    }
+    window.runVisitorScan = runScan;
+
+    if (closeBtn) closeBtn.addEventListener('click', close);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
 })();
 
