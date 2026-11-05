@@ -9,7 +9,7 @@ description: Upcoming conferences, trainings, and security events I'm attending
 
 <section id="calendar" class="section calendar-page" style="margin-top: 60px;">
     <div class="container">
-        <h1 class="section-title glitch" data-text="$ cal 2025-2026"># cat calendar.ical</h1>
+        <h1 class="section-title glitch" data-text="# cat calendar.ical"># cat calendar.ical</h1>
         <p class="section-description">Upcoming conferences, trainings, and security events</p>
         
         <!-- Current Month Overview -->
@@ -67,17 +67,21 @@ description: Upcoming conferences, trainings, and security events I'm attending
         <!-- Events Timeline -->
         <div class="calendar-timeline">
             {% assign sorted_events = site.data.calendar.events | sort: 'date_start' %}
-            {% assign now = 'now' | date: '%s' %}
+            {% assign now = 'now' | date: '%Y-%m-%d' %}
+            {% assign rendered_upcoming = 0 %}
             
             {% for event in sorted_events %}
-                {% assign event_date = event.date_start | date: '%s' %}
-                {% assign event_end_date = event.date_end | date: '%s' %}
+                {% assign event_status = event.status | downcase %}
+                {% assign event_end_date = event.date_end | default: event.date_start | date: '%Y-%m-%d' %}
                 {% assign is_upcoming = false %}
-                {% if event_end_date >= now or event.status == 'attending' %}
-                    {% assign is_upcoming = true %}
-                {% endif %}
+                {% unless event_status == 'completed' or event_status == 'cancelled' %}
+                    {% if event_end_date >= now or event_status == 'attending' %}
+                        {% assign is_upcoming = true %}
+                    {% endif %}
+                {% endunless %}
                 
                 {% if is_upcoming %}
+                {% assign rendered_upcoming = rendered_upcoming | plus: 1 %}
                 <div class="calendar-event" data-status="{{ event.status | downcase }}" data-type="{{ event.type | downcase }}" data-search="{{ event.title | downcase | escape }} {{ event.location | downcase | escape }} {{ event.description | default: '' | downcase | escape }}">
                     <div class="event-date">
                         <div class="event-month">{{ event.date_start | date: "%b" }}</div>
@@ -156,11 +160,7 @@ description: Upcoming conferences, trainings, and security events I'm attending
                         </div>
                         {% endif %}
                     </div>
-                </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <p id="calendarUpcomingEmpty" class="calendar-empty" hidden>No upcoming events match your filter.</p>
+                </div>{% if rendered_upcoming > 0 %} hidden{% endif %}>No upcoming events scheduled right now — check the past events log below.</p>
 
         <!-- Past Events Summary -->
         <div class="calendar-past" id="calendarPastSection">
@@ -173,13 +173,21 @@ description: Upcoming conferences, trainings, and security events I'm attending
             </h2>
             
             <div class="calendar-past-list" id="calendarPastList">
-                {% for event in sorted_events %}
-                    {% assign event_end_date = event.date_end | date: '%s' %}
-                    {% if event_end_date < now %}
+                {% assign past_events = sorted_events | reverse %}
+                {% for event in past_events %}
+                    {% assign event_status = event.status | downcase %}
+                    {% assign event_end_date = event.date_end | default: event.date_start | date: '%Y-%m-%d' %}
+                    {% if event_end_date < now or event_status == 'completed' %}
                     <div class="past-event-item" data-status="{{ event.status | downcase }}" data-type="{{ event.type | downcase }}" data-search="{{ event.title | downcase | escape }} {{ event.location | downcase | escape }} {{ event.description | default: '' | downcase | escape }}">
                         <div class="past-event-info">
                             <span class="past-event-date">{{ event.date_start | date: "%b %Y" }}</span>
-                            <span class="past-event-title">{{ event.title }}</span>
+                            <span class="past-event-title">
+                                {% if event.url %}
+                                <a href="{{ event.url }}" target="_blank" rel="noopener noreferrer">{{ event.title }}</a>
+                                {% else %}
+                                {{ event.title }}
+                                {% endif %}
+                            </span>
                             <span class="past-event-location">{{ event.location }}</span>
                         </div>
                         {% if event.blog_post or event.gallery %}
@@ -217,7 +225,12 @@ description: Upcoming conferences, trainings, and security events I'm attending
             {% assign upcoming_count = 0 %}
             {% assign completed_count = 0 %}
             {% for event in site.data.calendar.events %}
-                {% assign event_date = event.date_start | date: '%s' %}
+                {% assign event_status = event.status | downcase %}
+                {% assign event_end_date = event.date_end | default: event.date_start | date: '%Y-%m-%d' %}
+                {% if event_status == 'completed' %}
+                    {% assign completed_count = completed_count | plus: 1 %}
+                {% elsif event_end_date >= now and event_status != 'cancelled' %}
+                    {% assign upcoming_count = upcoming date: '%s' %}
                 {% if event_date >= now %}
                     {% assign upcoming_count = upcoming_count | plus: 1 %}
                 {% elsif event.status == 'completed' %}

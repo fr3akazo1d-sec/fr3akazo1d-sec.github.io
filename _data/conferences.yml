@@ -11,10 +11,10 @@ conferences:
       - Attended advanced red team workshops
       - Attended DefCon workshops
       - Networking with security professionals
-    highlights: 
+    highlights:
       - Meeting with the OS-Community (AthenaOS)
       - 2 Workshops
-      - 2 DefCon Partys (Defcon-Pool Party and Red Team Party)
+      - 2 DEF CON Parties (DEF CON Pool Party and Red Team Party)
 
   - name: 24h CyberSecurity
     location: Klagenfurt, Austria
@@ -22,11 +22,10 @@ conferences:
     year: 2025
     type: Meetup
     activities:
-      - Talks about CyberSecruity
+      - Talks about Cybersecurity
       - Networking
-    highlights: 
+    highlights: []
 
-    
   - name: DEF CON 30
     location: Las Vegas, USA
     date: 2022-08
@@ -34,8 +33,8 @@ conferences:
     type: Conference + Workshop
     activities:
       - RedTeam Village Workshop
-      - Defcon Talks
+      - DEF CON Talks
       - Car hacking sessions
-    highlights: ""
+    highlights: []
     
     

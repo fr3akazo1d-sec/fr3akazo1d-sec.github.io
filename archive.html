@@ -9,40 +9,34 @@ description: Complete archive of all blog posts
 
 <section class="section" style="margin-top: 60px;">
     <div class="container" style="max-width: 1200px; margin: 0 auto;">
-        <h1 class="section-title glitch" data-text="$ ls -la ~/blog/archive"># ls -la ~/blog/archive</h1>
+        <h1 class="section-title glitch" data-text="# ls -la ~/blog/archive"># ls -la ~/blog/archive</h1>
         <p class="section-description">Complete archive of all blog posts</p>
 
         {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
         
         {% for year in posts_by_year %}
-        <div class="archive-year" style="margin-bottom: 3rem;">
-            <h2 style="color: var(--accent-cyan); font-size: 2rem; margin-bottom: 1.5rem; border-bottom: 2px solid rgba(0, 255, 247, 0.3); padding-bottom: 0.5rem;">
-                {{ year.name }}
-            </h2>
+        <div class="archive-year">
+            <h2 class="archive-year-title">{{ year.name }}</h2>
             
-            <div class="archive-posts" style="display: grid; gap: 1rem;">
+            <div class="archive-posts">
                 {% for post in year.items %}
-                <div class="archive-post-item" style="background: rgba(20, 29, 43, 0.5); border: 1px solid rgba(0, 255, 247, 0.2); border-radius: 8px; padding: 1.5rem; transition: all 0.3s ease;">
-                    <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
-                        <div style="min-width: 120px; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">
-                            {{ post.date | date: "%b %d, %Y" }}
+                <div class="archive-post-item">
+                    <div class="archive-post-row">
+                        <div class="archive-post-date">
+                            [{{ post.date | date: "%Y-%m-%d" }}]
                         </div>
-                        <div style="flex: 1; min-width: 250px;">
-                            <h3 style="margin: 0 0 0.5rem 0;">
-                                <a href="{{ post.url | relative_url }}" style="color: var(--text-main); text-decoration: none; font-size: 1.3rem; transition: color 0.3s ease;">
-                                    {{ post.title }}
-                                </a>
+                        <div class="archive-post-body">
+                            <h3 class="archive-post-title">
+                                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                             </h3>
                             {% if post.excerpt %}
-                            <p style="color: var(--text-secondary); margin: 0.5rem 0; line-height: 1.6;">
-                                {{ post.excerpt | strip_html | truncate: 150 }}
+                            <p class="archive-post-excerpt">
+                                {{ post.description | default: post.excerpt | strip_html | truncate: 160 }}
                             </p>
                             {% endif %}
-                            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.75rem;">
-                                {% for tag in post.tags limit:3 %}
-                                <span style="background: rgba(0, 255, 247, 0.1); color: var(--accent-cyan); padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; border: 1px solid rgba(0, 255, 247, 0.3);">
-                                    #{{ tag }}
-                                </span>
+                            <div class="archive-post-tags">
+                                {% for tag in post.tags limit:4 %}
+                                <a href="{{ site.baseurl }}/tags/#{{ tag | slugify }}" class="archive-tag">#{{ tag }}</a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -54,28 +48,110 @@ description: Complete archive of all blog posts
         {% endfor %}
         
         {% if site.posts.size == 0 %}
-        <p style="text-align: center; color: var(--text-secondary); padding: 3rem;">
-            No posts in the archive yet.
-        </p>
+        <p class="calendar-empty">No posts in the archive yet.</p>
         {% endif %}
     </div>
 </section>
 
 <style>
-.archive-post-item:hover {
-    border-color: var(--accent-cyan) !important;
-    box-shadow: 0 10px 30px rgba(0, 255, 247, 0.2);
-    transform: translateY(-2px);
+.archive-year {
+    margin-bottom: 3rem;
 }
 
-.archive-post-item:hover h3 a {
-    color: var(--accent-cyan) !important;
+.archive-year-title {
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.24);
+    padding-bottom: 0.5rem;
+}
+
+.archive-posts {
+    display: grid;
+    gap: 1rem;
+}
+
+.archive-post-item {
+    background: linear-gradient(180deg, rgba(17, 25, 39, 0.88) 0%, rgba(11, 17, 27, 0.94) 100%);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 1.4rem 1.5rem;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.archive-post-item:hover {
+    border-color: var(--card-border-hover) !important;
+    box-shadow: var(--shadow-strong);
+    transform: translateY(-3px);
+}
+
+.archive-post-row {
+    display: flex;
+    gap: 1.75rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.archive-post-date {
+    min-width: 118px;
+    color: var(--accent-red);
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    padding-top: 0.2rem;
+}
+
+.archive-post-body {
+    flex: 1;
+    min-width: 240px;
+}
+
+.archive-post-title {
+    margin: 0 0 0.45rem 0;
+}
+
+.archive-post-title a {
+    color: var(--text-bright);
+    text-decoration: none;
+    font-size: 1.25rem;
+    transition: color 0.2s ease;
+}
+
+.archive-post-item:hover .archive-post-title a {
+    color: var(--accent-cyan);
+}
+
+.archive-post-excerpt {
+    color: var(--text-dim);
+    margin: 0.4rem 0 0.85rem;
+    line-height: 1.65;
+}
+
+.archive-post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.archive-tag {
+    background: rgba(0, 240, 255, 0.08);
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    padding: 0.2rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.archive-tag:hover {
+    background: rgba(0, 240, 255, 0.16);
+    border-color: var(--accent-cyan);
 }
 
 @media (max-width: 768px) {
-    .archive-post-item > div {
-        flex-direction: column !important;
-        gap: 1rem !important;
-    }
-}
+    .archive-post-row {
+        flex-direction: column;
+        gap: 0.65rem;
 </style>

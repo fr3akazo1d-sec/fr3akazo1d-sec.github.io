@@ -156,18 +156,47 @@
 
 /* === CODE BLOCKS === */
 .post-content pre {
-    background: var(--bg-main);
+    position: relative;
+    background: #070b11;
     padding: 1.5rem;
+    padding-top: 2.2rem;
     border-radius: 10px;
     overflow-x: auto;
-    border: 1px solid rgba(0, 255, 247, 0.3);
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.45);
     margin: 2rem 0;
+}
+
+.code-copy-btn {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.65rem;
+    background: rgba(15, 22, 35, 0.9);
+    border: 1px solid rgba(0, 240, 255, 0.28);
+    border-radius: 4px;
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+    cursor: pointer;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.code-copy-btn:hover {
+    background: rgba(0, 240, 255, 0.14);
+    border-color: var(--accent-cyan);
+    color: var(--text-bright);
+}
+
+.code-copy-btn.copied {
+    border-color: var(--accent-green);
+    color: var(--accent-green);
 }
 
 .post-content code {
     font-family: var(--font-mono);
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.92rem;
+    line-height: 1.65;
 }
 
 .post-content pre code {
@@ -176,29 +205,77 @@
 
 .post-content p code,
 .post-content li code {
-    background: rgba(0, 255, 247, 0.1);
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.18);
+    color: var(--accent-cyan);
+    padding: 0.15rem 0.45rem;
+    border-radius: 5px;
+    font-size: 0.88em;
+}
+
+/* Code syntax highlighting (manual + Rouge/Jekyll .highlight tokens) */
+.post-content .keyword,
+.highlight .k,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kt,
+.highlight .ow {
     color: var(--accent-red);
-    padding: 0.2rem 0.45rem;
-    border-radius: 6px;
-    font-size: 0.9em;
+    font-weight: 500;
 }
 
-/* Code syntax highlighting classes (for manual highlighting) */
-.post-content .keyword {
-    color: var(--accent-red);
+.post-content .string,
+.highlight .s,
+.highlight .sa,
+.highlight .sb,
+.highlight .sc,
+.highlight .dl,
+.highlight .sd,
+.highlight .s2,
+.highlight .se,
+.highlight .sh,
+.highlight .si,
+.highlight .sx,
+.highlight .sr,
+.highlight .s1,
+.highlight .ss {
+    color: #7ee787;
 }
 
-.post-content .string {
-    color: #98c379;
-}
-
-.post-content .comment {
-    color: #5c6370;
+.post-content .comment,
+.highlight .c,
+.highlight .ch,
+.highlight .cm,
+.highlight .cp,
+.highlight .cpf,
+.highlight .c1,
+.highlight .cs {
+    color: #6e8098;
     font-style: italic;
 }
 
-.post-content .function {
+.post-content .function,
+.highlight .nf,
+.highlight .fm,
+.highlight .nc,
+.highlight .nn,
+.highlight .nb,
+.highlight .nt {
     color: var(--accent-cyan);
+}
+
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .il,
+.highlight .mo,
+.highlight .na,
+.highlight .no {
+    color: #f59e0b;
 }
 
 /* === IMAGES === */
@@ -500,7 +577,7 @@
    ========================================== */
 .post-layout {
     display: grid;
-    grid-template-columns: 210px 1fr;
+    grid-template-columns: 255px minmax(0, 1fr);
     gap: 2.5rem;
     align-items: start;
 }
@@ -511,26 +588,26 @@
 
 .toc-sidebar {
     position: sticky;
-    top: 70px;
-    max-height: calc(100vh - 90px);
+    top: 72px;
+    max-height: calc(100vh - 92px);
     overflow-y: auto;
-    background: rgba(10, 14, 20, 0.7);
-    border: 1px solid rgba(0, 255, 247, 0.15);
-    border-radius: 6px;
+    background: rgba(9, 13, 20, 0.85);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
     font-family: var(--font-mono);
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 255, 247, 0.15) transparent;
+    scrollbar-color: rgba(0, 240, 255, 0.2) transparent;
 }
 
 /* --- TOC prompt header --- */
 .toc-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 0.4rem;
-    padding: 0.45rem 0.6rem;
-    border-bottom: 1px solid rgba(0, 255, 247, 0.12);
-    background: rgba(0, 255, 247, 0.05);
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.14);
+    background: rgba(0, 240, 255, 0.05);
     position: sticky;
     top: 0;
     z-index: 1;
@@ -538,7 +615,7 @@
     user-select: none;
 }
 
-.toc-header:hover { background: rgba(0, 255, 247, 0.09); }
+.toc-header:hover { background: rgba(0, 240, 255, 0.09); }
 
 .toc-prompt-wrap {
     flex: 1;
@@ -547,24 +624,24 @@
 
 .toc-prompt {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     white-space: normal;
-    word-break: break-all;
-    line-height: 1.5;
+    overflow-wrap: break-word;
+    line-height: 1.45;
     display: block;
 }
 
 .toc-p-user   { color: var(--accent-cyan); }
-.toc-p-at     { color: rgba(192,192,192,0.4); }
+.toc-p-at     { color: var(--text-dim); }
 .toc-p-host   { color: var(--accent-red); }
-.toc-p-suffix { color: rgba(192,192,192,0.4); }
-.toc-p-cmd    { color: rgba(192,192,192,0.7); }
+.toc-p-suffix { color: var(--text-dim); }
+.toc-p-cmd    { color: var(--text-main); }
 .toc-p-file   { color: var(--accent-cyan); opacity: 0.9; }
 
 .toc-collapse {
     background: none;
     border: none;
-    color: rgba(192, 192, 192, 0.5);
+    color: var(--text-dim);
     font-family: var(--font-mono);
     font-size: 1rem;
     line-height: 1;
@@ -589,10 +666,11 @@
 
 /* --- ls -la total line --- */
 .ls-total {
-    padding: 0.3rem 0.6rem 0.15rem;
+    padding: 0.35rem 0.7rem 0.2rem;
     font-family: var(--font-mono);
-    font-size: 0.62rem;
-    color: rgba(192,192,192,0.3);
+    font-size: 0.64rem;
+    color: var(--text-dim);
+    opacity: 0.7;
     user-select: none;
 }
 
@@ -600,45 +678,48 @@
 .toc-list {
     list-style: none;
     margin: 0;
-    padding: 0.15rem 0 0.4rem;
+    padding: 0.15rem 0 0.5rem;
 }
 
 .toc-item {
-    display: block;
-    padding: 0.08rem 0.5rem;
-    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 0.08rem;
+    padding: 0.28rem 0.7rem;
+    line-height: 1.4;
     border-left: 2px solid transparent;
     transition: border-color 0.2s, background 0.2s;
 }
 
 .toc-item.active {
     border-left-color: var(--accent-cyan);
-    background: rgba(0,255,247,0.04);
+    background: rgba(0, 240, 255, 0.06);
 }
 
 .toc-item--h3 {
-    padding-left: 1rem;
+    padding-left: 1.15rem;
 }
 
 /* --- permissions + owner --- */
 .ls-meta {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     user-select: none;
     white-space: nowrap;
+    line-height: 1.2;
 }
 
-.ls-perm  { color: rgba(192,192,192,0.22); }
-.ls-owner { color: rgba(0,255,247,0.3); }
+.ls-perm  { color: rgba(209, 218, 230, 0.32); }
+.ls-owner { color: rgba(0, 240, 255, 0.42); }
 
 /* --- the clickable name --- */
 .toc-link {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.74rem;
     text-decoration: none;
     transition: color 0.15s, text-shadow 0.15s;
-    word-break: break-word;
-    overflow-wrap: anywhere;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 /* h2 = directory → cyan */

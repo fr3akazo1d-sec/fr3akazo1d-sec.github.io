@@ -3494,10 +3494,13 @@ header::before {
 
 .conf-highlights {
     margin-top: var(--spacing-md);
-    padding: var(--spacing-sm);
-    background: rgba(0, 255, 247, 0.05);
+    padding: 0.85rem 1rem;
+    background: rgba(0, 240, 255, 0.05);
     border-left: 3px solid var(--accent-cyan);
     border-radius: 4px;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.6;
 }
 
 .conf-highlights strong {
@@ -3506,10 +3509,25 @@ header::before {
     font-size: 0.9rem;
 }
 
-.conf-highlights {
-    color: var(--text-dim);
-    font-size: 0.9rem;
-    line-height: 1.6;
+.conf-highlights ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0.45rem;
+}
+
+.conf-highlights li {
+    position: relative;
+    padding-left: 1.35rem;
+    margin-bottom: 0.35rem;
+    color: var(--text-main);
+}
+
+.conf-highlights li::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    color: var(--accent-cyan);
+    font-size: 0.78rem;
 }
 
 /* === GALLERY SECTION === */
@@ -4655,6 +4673,17 @@ html {
     color: var(--text-bright);
     font-size: 1rem;
     font-weight: 500;
+}
+
+.past-event-title a {
+    color: var(--text-bright);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.past-event-item:hover .past-event-title a,
+.past-event-title a:hover {
+    color: var(--accent-cyan);
 }
 
 .past-event-location {

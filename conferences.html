@@ -9,7 +9,7 @@ description: Security conferences, CTFs, and events I've attended
 
 <section id="conferences" class="section" style="margin-top: 60px;">
     <div class="container">
-        <h1 class="section-title glitch" data-text="$ grep -r 'attended' conferences.log"># grep -r 'attended' conferences.log</h1>
+        <h1 class="section-title glitch" data-text="# grep -r 'attended' conferences.log"># grep -r 'attended' conferences.log</h1>
         <p class="section-description">Security conferences, CTFs, and community events I've participated in</p>
         
         {% if site.data.conferences.conferences %}
@@ -18,7 +18,7 @@ description: Security conferences, CTFs, and events I've attended
         
         {% for year_group in conferences_by_year %}
         <div class="conference-year-group">
-            <h3 class="conference-year">{{ year_group.name }}</h3>
+            <h2 class="conference-year">{{ year_group.name }}</h2>
             
             <div class="conferences-grid">
                 {% for conference in year_group.items %}
@@ -37,7 +37,7 @@ description: Security conferences, CTFs, and events I've attended
                     </div>
                     <div class="conf-date">{{ conference.date }}</div>
                     
-                    {% if conference.activities %}
+                    {% if conference.activities and conference.activities.size > 0 %}
                     <div class="conf-activities">
                         <strong>Activities:</strong>
                         <ul>
@@ -48,7 +48,7 @@ description: Security conferences, CTFs, and events I've attended
                     </div>
                     {% endif %}
                     
-                    {% if conference.highlights %}
+                    {% if conference.highlights and conference.highlights != "" and conference.highlights.size > 0 %}
                     <div class="conf-highlights">
                         <strong>Highlights:</strong>
                         <ul>

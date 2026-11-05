@@ -779,6 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
+    initCodeCopyButtons();
     initResourcesPage();
     initTagsPage();
     initCalendarPage();
@@ -890,6 +891,41 @@ function initTagsPage() {
     });
 }
 
+function initCodeCopyButtons() {
+    const codeBlocks = document.querySelectorAll('.post-content pre');
+    if (!codeBlocks.length) return;
+
+    codeBlocks.forEach((pre) => {
+        if (pre.querySelector('.code-copy-btn')) return;
+        const codeEl = pre.querySelector('code');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-copy-btn';
+        btn.setAttribute('aria-label', 'Copy code to clipboard');
+        btn.textContent = '[copy]';
+
+        btn.addEventListener('click', async () => {
+            const rawText = (codeEl ? codeEl.innerText : pre.innerText).replace(/\n$/, '');
+            try {
+                await navigator.clipboard.writeText(rawText);
+                btn.textContent = '[copied ✓]';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '[copy]';
+                    btn.classList.remove('copied');
+                }, 1800);
+            } catch (_) {
+                btn.textContent = '[error]';
+                setTimeout(() => {
+                    btn.textContent = '[copy]';
+                }, 1500);
+            }
+        });
+
+        pre.appendChild(btn);
+    });
+}
+
 function initCalendarPage() {
     const calendarPage = document.querySelector('.calendar-page');
     if (!calendarPage) return;
@@ -906,7 +942,7 @@ function initCalendarPage() {
     const upcomingEmpty = document.getElementById('calendarUpcomingEmpty');
     const pastEmpty = document.getElementById('calendarPastEmpty');
 
-    if (!searchInput || !typeFilter || !statusFilter || !showPastCheckbox || !results || !upcomingEvents.length) {
+    if (!searchInput || !typeFilter || !statusFilter || !showPastCheckbox || !results || (!upcomingEvents.length && !pastEvents.length)) {
         return;
     }
 

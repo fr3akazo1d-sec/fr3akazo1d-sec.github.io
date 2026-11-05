@@ -1,10 +1,10 @@
 <!-- Mobile Menu Toggle -->
-<button class="mobile-menu-toggle" aria-label="Toggle navigation">
+<button class="mobile-menu-toggle" aria-label="Open navigation" aria-controls="primary-navigation" aria-expanded="false">
     <span class="mob-toggle-text">[&gt;_]</span>
     <span class="mob-toggle-close" aria-hidden="true">[ x ]</span>
 </button>
 
-<nav class="nav-menu">
+<nav id="primary-navigation" class="nav-menu">
     <a href="{{ site.baseurl }}/" class="nav-prompt" aria-label="Go to home"><span class="nav-prompt-user">root</span><span class="nav-prompt-at">@</span><span class="nav-prompt-host">fr3akazo1d</span><span class="nav-prompt-suffix">:~#</span></a>
     <ul>
         <li><a href="{{ site.baseurl }}/" class="nav-link">Home</a></li>
