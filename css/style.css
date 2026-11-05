@@ -4443,16 +4443,16 @@ html {
 
 /* Calendar Timeline */
 .calendar-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-sm);
     margin-bottom: var(--spacing-xl);
 }
 
 .calendar-event {
     display: flex;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
     background: var(--bg-secondary);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
@@ -4468,7 +4468,7 @@ html {
 /* Event Date Box */
 .event-date {
     flex-shrink: 0;
-    width: 80px;
+    width: 64px;
     text-align: center;
     padding: var(--spacing-sm);
     background: linear-gradient(135deg, var(--bg-main), var(--bg-secondary));
@@ -4513,7 +4513,7 @@ html {
 }
 
 .event-title {
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     color: var(--text-bright);
     margin: 0;
     font-family: 'JetBrains Mono', monospace;
@@ -4781,6 +4781,10 @@ html {
 
     .calendar-event {
         flex-direction: column;
+    }
+
+    .calendar-timeline {
+        grid-template-columns: 1fr;
     }
     
     .event-date {
