@@ -57,8 +57,105 @@ events:
     url: "https://defcon.org"
     status: "completed"  # planned, confirmed, attending, completed
     description: "World's largest hacking conference"
-    
-  
+
+  - title: "DeepSec 2026"
+    type: "conference"
+    date_start: 2026-11-17
+    date_end: 2026-11-20
+    location: "Vienna, Austria"
+    url: "https://deepsec.net"
+    status: "planned"
+    description: "In-depth European offensive security, red teaming, and deep-dive technical workshops in Vienna"
+
+  - title: "Black Hat Europe 2026"
+    type: "conference"
+    date_start: 2026-12-07
+    date_end: 2026-12-10
+    location: "ExCeL, London, United Kingdom"
+    url: "https://blackhat.com/europe/"
+    status: "planned"
+    description: "Offensive security briefings, hands-on trainings, and Black Hat Arsenal open-source tool demos"
+
+  - title: "40th Chaos Communication Congress (40C3)"
+    type: "conference"
+    date_start: 2026-12-27
+    date_end: 2026-12-30
+    location: "Hamburg Messe, Hamburg, Germany"
+    url: "https://events.ccc.de/congress/2026/"
+    status: "planned"
+    description: "Europe's largest hacker congress by the CCC — hardware hacking, offensive research, and assemblies"
+
+  - title: "Insomni'hack 2027"
+    type: "conference"
+    date_start: 2027-02-01
+    date_end: 2027-02-06
+    location: "SwissTech Convention Center, Lausanne, Switzerland"
+    url: "https://insomnihack.ch"
+    status: "planned"
+    description: "Swiss offensive security conference featuring red team workshops, vulnerability research talks, and live CTF"
+
+  - title: "OffensiveCon Berlin 2027"
+    type: "conference"
+    date_start: 2027-05-14
+    date_end: 2027-05-15
+    location: "Berlin, Germany"
+    url: "https://www.offensivecon.org"
+    status: "planned"
+    description: "Purely offensive security conference dedicated to vulnerability discovery, exploit development, and reverse engineering"
+
+  - title: "x33fcon 2027"
+    type: "conference"
+    date_start: 2027-06-10
+    date_end: 2027-06-11
+    location: "Gdynia, Poland"
+    url: "https://www.x33fcon.com"
+    status: "planned"
+    description: "Europe's premier Red Team & Blue Team conference focused on adversary simulation, C2, and detection evasion"
+
+  - title: "TROOPERS27"
+    type: "conference"
+    date_start: 2027-06-21
+    date_end: 2027-06-25
+    location: "Heidelberg, Germany"
+    url: "https://troopers.de"
+    status: "planned"
+    description: "High-level offensive security, Active Directory exploitation, and hands-on practitioner trainings by ERNW"
+
+  - title: "BSides Vienna 2027 (0x7EB)"
+    type: "conference"
+    date_start: 2027-06-26
+    date_end: 2027-06-26
+    location: "Urania Dachsaal, Vienna, Austria"
+    url: "https://bsidesvienna.at"
+    status: "planned"
+    description: "Community-driven offensive & defensive security conference and hallway track in Vienna"
+
+  - title: "Black Hat USA 2027"
+    type: "conference"
+    date_start: 2027-07-31
+    date_end: 2027-08-05
+    location: "Mandalay Bay, Las Vegas, Nevada, USA"
+    url: "https://blackhat.com/upcoming.html#usa"
+    status: "planned"
+    description: "Flagship offensive security trainings, zero-day research briefings, and Black Hat Arsenal"
+
+  - title: "BSides Las Vegas 2027"
+    type: "conference"
+    date_start: 2027-08-02
+    date_end: 2027-08-04
+    location: "Tuscany Suites & Casino, Las Vegas, Nevada, USA"
+    url: "https://bsideslv.org"
+    status: "planned"
+    description: "Community hacker conference during Hacker Summer Camp featuring Proving Ground, Ground Truth, and offensive research tracks"
+
+  - title: "DEF CON 35"
+    type: "conference"
+    date_start: 2027-08-05
+    date_end: 2027-08-08
+    location: "Las Vegas, Nevada, USA"
+    url: "https://defcon.org"
+    status: "planned"
+    description: "World's largest underground hacking conference — Red Team Village, Adversary Village, and CTFs"
 
 # Types: conference, training, workshop, meetup, ctf, other
 # Status: planned, confirmed, attending, completed, cancelled
