@@ -160,7 +160,11 @@ description: Upcoming conferences, trainings, and security events I'm attending
                         </div>
                         {% endif %}
                     </div>
-                </div>{% if rendered_upcoming > 0 %} hidden{% endif %}>No upcoming events scheduled right now — check the past events log below.</p>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <p id="calendarUpcomingEmpty" class="calendar-empty"{% if rendered_upcoming > 0 %} hidden{% endif %}>No upcoming events scheduled right now — check the past events log below.</p>
 
         <!-- Past Events Summary -->
         <div class="calendar-past" id="calendarPastSection">
@@ -230,11 +234,7 @@ description: Upcoming conferences, trainings, and security events I'm attending
                 {% if event_status == 'completed' %}
                     {% assign completed_count = completed_count | plus: 1 %}
                 {% elsif event_end_date >= now and event_status != 'cancelled' %}
-                    {% assign upcoming_count = upcoming date: '%s' %}
-                {% if event_date >= now %}
                     {% assign upcoming_count = upcoming_count | plus: 1 %}
-                {% elsif event.status == 'completed' %}
-                    {% assign completed_count = completed_count | plus: 1 %}
                 {% endif %}
             {% endfor %}
             
