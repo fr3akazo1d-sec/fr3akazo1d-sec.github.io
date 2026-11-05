@@ -495,35 +495,6 @@
     }
 }
 
-/* === ENSURE CUSTOM CURSOR ON BLOG POSTS === */
-body, body * {
-    cursor: none !important;
-}
-
-.cursor {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-.cursor-follower {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-/* === HIDE CUSTOM CURSOR ON TOUCH/MOBILE DEVICES === */
-@media (hover: none), (pointer: coarse) {
-    body, body * {
-        cursor: auto !important;
-    }
-    .cursor,
-    .cursor-follower {
-        display: none !important;
-        visibility: hidden !important;
-    }
-}
-
 /* ==========================================
    TABLE OF CONTENTS SIDEBAR
    ========================================== */

@@ -1167,6 +1167,15 @@ window.addEventListener('load', () => {
     const ghRepos = document.getElementById('ghRepos');
     const ghFollowers = document.getElementById('ghFollowers');
     const ghFollowing = document.getElementById('ghFollowing');
+    const ghAvatarImg = document.querySelector('.github-profile-avatar img');
+    if (ghAvatarImg) {
+        ghAvatarImg.addEventListener('error', () => {
+            if (!ghAvatarImg.dataset.fallbackApplied) {
+                ghAvatarImg.dataset.fallbackApplied = '1';
+                ghAvatarImg.src = '/assets/images/avatar.png';
+            }
+        });
+    }
     if (!grid) return;
 
     const USER = 'fr3akazo1d-sec';
